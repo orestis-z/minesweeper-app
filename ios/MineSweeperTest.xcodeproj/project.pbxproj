@@ -39,6 +39,7 @@
 		99A1C28FB5EE460C923F6E9F /* addlg.tff in Resources */ = {isa = PBXBuildFile; fileRef = DFFD946425FD4D2A86ED9415 /* addlg.tff */; };
 		66E537A02E70479EAFA26A12 /* easports.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5C205197081344D188677240 /* easports.ttf */; };
 		8994D0175126450B942F5CA4 /* coolvetica.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0B4C6298D6A940A59BDB7372 /* coolvetica.ttf */; };
+		BC78876973554ED9BF843BC3 /* digital.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 61692B492AFE4CD081135CFC /* digital.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -262,6 +263,7 @@
 		DFFD946425FD4D2A86ED9415 /* addlg.tff */ = {isa = PBXFileReference; name = "addlg.tff"; path = "../assets/fonts/addlg.tff"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 		5C205197081344D188677240 /* easports.ttf */ = {isa = PBXFileReference; name = "easports.ttf"; path = "../src/assets/fonts/easports.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 		0B4C6298D6A940A59BDB7372 /* coolvetica.ttf */ = {isa = PBXFileReference; name = "coolvetica.ttf"; path = "../src/assets/fonts/coolvetica.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		61692B492AFE4CD081135CFC /* digital.ttf */ = {isa = PBXFileReference; name = "digital.ttf"; path = "../src/assets/fonts/digital.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -498,6 +500,7 @@
 				DFFD946425FD4D2A86ED9415 /* addlg.tff */,
 				5C205197081344D188677240 /* easports.ttf */,
 				0B4C6298D6A940A59BDB7372 /* coolvetica.ttf */,
+				61692B492AFE4CD081135CFC /* digital.ttf */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -865,6 +868,7 @@
 				99A1C28FB5EE460C923F6E9F /* addlg.tff in Resources */,
 				66E537A02E70479EAFA26A12 /* easports.ttf in Resources */,
 				8994D0175126450B942F5CA4 /* coolvetica.ttf in Resources */,
+				BC78876973554ED9BF843BC3 /* digital.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
