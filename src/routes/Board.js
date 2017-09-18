@@ -18,13 +18,16 @@ import {
 } from 'src/assets/images';
 
 class Button extends Component {
+  reveal = () => this.props.mines.reveal([this.props.i, this.props.j])
+  mark = () => this.props.mines.mark([this.props.i, this.props.j])
+
   render() {
-    const { mines, mark, styles } = this.props;
+    const { mark, styles } = this.props;
 
     return (
       <TouchableNativeFeedback
-        onPress={ () => mines.reveal([this.props.i, this.props.j]) }
-        onLongPress={ () => mines.mark([this.props.i, this.props.j]) }
+        onPress={ this.props.inputMode ? this.mark : this.reveal }
+        onLongPress={ this.props.inputMode ? this.reveal : this.mark }
       >
         <View
           style={ [styles.button,
@@ -154,6 +157,7 @@ export default class Board extends Component {
                   i={ i }
                   j={ j }
                   mark={ cellState }
+                  inputMode={ this.props.inputMode }
                 />
               )
             else

@@ -9,6 +9,8 @@ import {
 } from 'react-native';
 
 import {
+  flagImage,
+  mineImage,
   smileImage,
   neutralImage,
   sadImage,
@@ -79,18 +81,129 @@ class SmileyBtn extends Component {
   }
 }
 
-export default class Header extends Component {
+class Flag extends Component {
   render() {
     return (
       <View
+        style={ styles.flagContainer }
+      >
+        <Image
+          source={ this.props.inputMode ? flagImage : mineImage }
+          style={ styles.smiley }
+          resizeMode='contain'
+        />
+      </View>
+    )
+  }
+}
+
+class FlagBtn extends Component {
+  render() {
+    return (
+      <View
+      style={ {margin: 10} }
+      >
+        <Button
+          onPress={ this.props.changeInputMode }   
+        >
+          <Flag
+            inputMode={ this.props.inputMode }
+          />
+        </Button>
+      </View>
+    )
+  }
+}
+
+class Timer extends Component {
+  render() {
+    const { count } = this.props;
+
+    return (
+      <View
         style={ {
+          backgroundColor: 'black',
+          width: 80,
+          height: 50,
+          margin: 10,
+        } }
+      >
+        <View
+          style={ {
+            left: 6,
+            top: 2,
+          } }
+        >
+          <View
+            style={ {
+              position: 'absolute',
+              width: 80,
+              height: 50,
+            } }
+          >
+            <Text
+              style={ {
+                fontFamily: 'digital',
+                fontSize: 50, 
+                color: colors.red,
+                opacity: 0.4,
+              } }
+            >
+              { '000' }
+            </Text>
+          </View>
+          <View
+            style={ {
+              position: 'absolute',
+              width: 80,
+              height: 50,
+            } }
+          >
+            <Text
+              style={ {
+                fontFamily: 'digital',
+                fontSize: 50,
+                color: colors.red,
+              } }
+            >
+              { count < 10 ? '00' + count :
+                count < 100 ? '0' + count :
+                count < 1000 ? '' + count :
+                '' + 999
+              }
+            </Text>
+          </View>
+        </View>
+      </View>
+    )
+  }
+}
+
+export default class Header extends Component {
+  render() {
+    console.log(this.props.mines)
+    return (
+      <View
+        style={ {
+          flexDirection: 'row',
           alignItems: 'center',
+          justifyContent: 'space-between',
           backgroundColor: colors.greyMain,
         } }
       >
+        <Timer
+          count={ this.props.mineCount }
+        />
         <SmileyBtn
           reset={ this.props.mines.reset }
           gameState={ this.props.gameState }
+        />
+        <FlagBtn
+          inputMode={ this.props.inputMode }
+          changeInputMode={ this.props.changeInputMode }
+        />
+        <Timer
+          count={ this.props.time }
         />
       </View>
     );
@@ -120,6 +233,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: colors.yellowSmiley,
     borderRadius: smileyDiam  / 2,
+  },
+  flagContainer: {
+    position: 'absolute',
+    left: smileyMargin,
+    top: smileyMargin,
+    height: smileyDiam,
+    width: smileyDiam,
+    alignItems: 'center',
   },
   triangleCorner: {
     width: 0,
