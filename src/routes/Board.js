@@ -1,11 +1,8 @@
 import React, { Component } from 'react';
 import {
-  Alert,
   Image,
   StyleSheet,
   Text,
-  TouchableNativeFeedback,
-  TouchableHighlight,
   Platform,
   View,
 } from 'react-native';
@@ -13,21 +10,37 @@ import _ from 'lodash';
 
 import colors from 'src/colors';
 
+// components
+import {
+  Touchable,
+} from 'src/components';
+
+// images
 import {
   crossImage,
   flagImage,
   mineImage,
 } from 'src/assets/images';
 
+// redux
+import { connect } from 'react-redux';
+
 const longPressTime = 5;
 
-const Touchable = Platform.OS === 'android' ? TouchableNativeFeedback : TouchableHighlight;
 
 class Button extends Component {
   pressDuration = 0;
 
   reveal = () => this.props.mines.reveal([this.props.i, this.props.j])
   mark = () => this.props.mines.mark([this.props.i, this.props.j])
+
+  shouldComponentUpdate(nextProps) {
+    return (
+      this.props.mark != nextProps.mark ||
+      this.props.inputMode != nextProps.inputMode ||
+      this.props.scale != nextProps.scale
+    );
+  }
 
   render() {
     const { mark, styles } = this.props;
@@ -72,6 +85,12 @@ class Button extends Component {
 }
 
 class ButtonPressed extends Component {
+  shouldComponentUpdate(nextProps) {
+    return (
+      this.props.nMines != nextProps.nMines  ||
+      this.props.scale != nextProps.scale
+    );
+  }
   render() {
     const { nMines, styles } = this.props;
 
@@ -121,8 +140,12 @@ class ButtonPressed extends Component {
   }
 }
 
+@connect( store => ({
+    windowSize: store.general.windowSize,
+}))
 export default class Board extends Component {
   state = {};
+  scale = 1;
 
   constructor(props) {
     super(props);
@@ -146,8 +169,8 @@ export default class Board extends Component {
     });
 
     this.buttonSize = props.buttonSize;
-    const scale = this.buttonSize / (squareDim + 2 * squareBorder);
-    this.styles = styles(scale);
+    this.scale = this.buttonSize / (squareDim + 2 * squareBorder);
+    this.styles = styles(this.scale);
   }
 
   componentWillUpdate(nextProps) {
@@ -157,8 +180,15 @@ export default class Board extends Component {
   }
 
   render() {
+    const { windowSize } = this.props;
     return (
-      <View>
+      <View
+        style={ {
+          backgroundColor: colors.greyShade,
+          height: windowSize.height,
+          width: windowSize.width,
+        } }
+      >
         { this.rangeX.map(i =>
           this.rangeY.map(j => {
             const cellState = this.state[i + ', ' + j];
@@ -168,6 +198,7 @@ export default class Board extends Component {
                 <Button
                   mines={ this.props.mines }
                   styles={ this.styles }
+                  scale={ this.scale }
                   x={ this.buttonSize * j }
                   y={ this.buttonSize * i }
                   i={ i }
@@ -180,6 +211,7 @@ export default class Board extends Component {
               return (
                 <ButtonPressed
                   styles={ this.styles }
+                  scale={ this.scale }
                   x={ this.buttonSize * j }
                   y={ this.buttonSize * i }
                   nMines={ cellState }

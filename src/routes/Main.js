@@ -61,8 +61,13 @@ const levelFactor = [0.12, 0.16, 0.21];
     windowSize: store.general.windowSize,
     fieldSize: store.general.fieldSize,
     level: store.general.level,
+    vibrate: store.general.vibrate,
 }))
 export default class Main extends Component {
+  static navigationOptions = {
+    header: null,
+  };
+  
   state = {
     game: 'NOT_STARTED',
     time: 0,
@@ -111,9 +116,9 @@ export default class Main extends Component {
         }
         if(state == 'WON' || state == 'LOST')
           this.stopTimer();
-        if(state == 'WON')
+        if(this.props.vibrate && state == 'WON')
           Vibration.vibrate([0, 200, 100, 200, 100, 500]);
-        if(state == 'LOST')
+        if(this.props.vibrate && state == 'LOST')
           Vibration.vibrate();
         if(state == 'NOT_STARTED') {
           this.setState({time: 0});
@@ -150,6 +155,7 @@ export default class Main extends Component {
       <View>
         <Menu
           height={ this.state.delta + minMenuHeight }
+          navigation={ this.props.navigation }
         />
         <Separator/>
         <Header

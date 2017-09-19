@@ -43,8 +43,6 @@ export default class Loading extends Component {
       >
         <Animated.Image
           style={{
-            // width: 227,
-            // height: 200,
             transform: [{rotate: spin}] }}
             source={ require('src/assets/images/mine.png') }
         />

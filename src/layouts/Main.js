@@ -2,10 +2,11 @@ import React, { Component } from 'react';
 import {
   View,
 } from 'react-native';
-import Orientation from 'react-native-orientation';
 import {
   Dimensions,
 } from 'react-native';
+import { StackNavigator } from 'react-navigation';
+import Orientation from 'react-native-orientation';
 
 // config
 import { store } from 'src/config';
@@ -14,6 +15,7 @@ import { store } from 'src/config';
 import {
     Main as MainScene,
     Loading,
+    Donate,
 } from 'src/routes'
 
 // redux
@@ -38,7 +40,17 @@ Dimensions.addEventListener('change', _orientationDidChange);
 
 _orientationDidChange({window: Dimensions.get('window')});
 
-const logoMinTime = 3;
+const logoMinTime = 2;
+
+const MainSceneNavigator = StackNavigator(
+  {
+  Main: { screen: MainScene },
+  Donate: { screen: Donate },
+  },
+  {
+    headerMode: 'screen',
+  }
+)
 
 @connect( store => ({
     loaded: store.general.loaded,
@@ -56,7 +68,7 @@ export default class Main extends Component {
             style={ {flex: 1} }
           >
             { this.props.loaded && this.state.timeOver ?
-              <MainScene/>
+              <MainSceneNavigator/>
             :
               <Loading/>
             }

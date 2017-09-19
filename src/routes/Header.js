@@ -3,13 +3,17 @@ import {
   Alert,
   Image,
   StyleSheet,
-  TouchableNativeFeedback,
-  TouchableHighlight,
   Platform,
   Text,
   View,
 } from 'react-native';
 
+// components
+import {
+  Touchable,
+} from 'src/components';
+
+// images
 import {
   flagImage,
   mineImage,
@@ -21,8 +25,6 @@ import {
 
 import colors from 'src/colors';
 
-const Touchable = Platform.OS === 'android' ? TouchableNativeFeedback : TouchableHighlight;
-
 class Button extends Component {
   render() {
     return (
@@ -31,9 +33,7 @@ class Button extends Component {
         onPressIn={ this.props.onPressIn }
         onPressOut={ this.props.onPressOut }
       >
-        <View
-          // style={  }
-        >
+        <View>
           <View
             style={ styles.triangleCorner }
           />
@@ -187,6 +187,19 @@ class Timer extends Component {
 }
 
 export default class Header extends Component {
+  reset() {
+    if (this.props.gameState === 'STARTED' ) {
+      Alert.alert('Restart Game?', null,
+        [
+          { text: 'OK', onPress: () => this.props.mines.reset() },
+          { text: 'Cancel', style: 'cancel' },
+        ],
+        { cancelable: false });
+    }
+    else
+      this.props.mines.reset();
+  }
+
   render() {
     return (
       <View
@@ -201,7 +214,7 @@ export default class Header extends Component {
           count={ this.props.mineCount }
         />
         <SmileyBtn
-          reset={ this.props.mines.reset }
+          reset={ this.reset.bind(this) }
           gameState={ this.props.gameState }
         />
         <FlagBtn
@@ -271,7 +284,5 @@ const styles = StyleSheet.create({
     backgroundColor: colors.greyMain,
     height: smileySquareSize,
     width: smileySquareSize,
-    // top: squareBorderScaled,
-    // left: squareBorderScaled,
   },
 })

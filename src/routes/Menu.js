@@ -14,7 +14,10 @@ import {
 } from 'react-native-popup-menu';
 
 // components
-import { CheckBox } from 'src/components';
+import {
+  CheckBox,
+  Touchable,
+} from 'src/components';
 
 // redux
 import { connect } from 'react-redux';
@@ -22,7 +25,8 @@ import { connect } from 'react-redux';
 import colors from 'src/colors';
 
 const fontSize = 14;
-const padding = 8; 
+const padding = 8;
+const menuOptionsMarginTop = 10;
 
 @connect( store => ({
     level: store.general.level,
@@ -55,7 +59,11 @@ class Game extends Component {
             Game
           </Text>
         </MenuTrigger>
-        <MenuOptions>
+        <MenuOptions
+          style={ {
+            marginTop: menuOptionsMarginTop
+          } }
+        >
           <MenuOption
             value={ 0 }
           >
@@ -115,7 +123,11 @@ class Options extends Component {
             Options
           </Text>
         </MenuTrigger>
-        <MenuOptions>
+        <MenuOptions
+          style={ {
+            marginTop: menuOptionsMarginTop
+          } }
+        >
           <MenuOption
             value={ 0 }
           >
@@ -160,8 +172,8 @@ class Options extends Component {
 
 class More extends Component {
   onSelectLevel(value) {
-    this.setState({selected: value});
-    return false;
+    if (value === 0)
+      this.props.navigation.navigate('Donate');
   }
 
   render() {
@@ -183,23 +195,18 @@ class More extends Component {
             More
           </Text>
         </MenuTrigger>
-        <MenuOptions>
+        <MenuOptions
+          style={ {
+            marginTop: menuOptionsMarginTop
+          } }
+        >
           <MenuOption
             value={ 0 }
           >
             <Text
               style={ { color: 'black' } }
             >
-              { ' Donate'}
-            </Text>
-          </MenuOption>
-          <MenuOption
-            value={ 1 }
-          >
-            <Text
-              style={ { color: 'black' } }
-            >
-              { ' About'}
+              { ' Pay what you want' }
             </Text>
           </MenuOption>
         </MenuOptions>
@@ -223,9 +230,16 @@ export default class _Menu extends Component {
           paddingLeft: 5,
         } }
       >
-        <Game padding={ padding }/>
-        <Options padding={ padding }/>
-        <More padding={ padding }/>
+        <Game
+          padding={ padding }
+        />
+        <Options
+          padding={ padding }
+        />
+        <More
+          padding={ padding }
+          navigation={ this.props.navigation }
+        />
       </View>
     );
   }
