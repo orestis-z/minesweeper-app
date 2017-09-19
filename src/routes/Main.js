@@ -1,42 +1,50 @@
 import React, { Component } from 'react';
 import {
-  Dimensions,
   View,
+  Vibration,
 } from 'react-native';
 import minesLogic from 'mines';
 
 import Board from './Board';
-import Header from './Header';
+import Header, { headerHeight } from './Header';
+import Menu from './Menu';
+
+// redux
+import { connect } from 'react-redux';
 
 import colors from 'src/colors';
 
-const separatorBorder = 4;
-const separatorWdith = 9;
+const separatorBorderWidth = 4;
+const separatorInlineWdith = 9;
+const separatorWidth = separatorInlineWdith + 2 * separatorBorderWidth;
 
+@connect( store => ({
+    windowSize: store.general.windowSize,
+}))
 class Separator extends Component {
   render() {
-    const { width } = this.props;
+    const { width } = this.props.windowSize;
 
     return (
       <View>
         <View
           style={ {
             width: width,
-            height: separatorBorder,
+            height: separatorBorderWidth,
             backgroundColor:colors.greyLight,
           } }
         />
         <View
           style={ {
             width: width,
-            height: separatorWdith,
+            height: separatorInlineWdith,
             backgroundColor:colors.greyMain,
           } }
         />
         <View
           style={ {
             width: width,
-            height: separatorBorder,
+            height: separatorBorderWidth,
             backgroundColor:colors.greyShade,
           } }
         />
@@ -45,13 +53,35 @@ class Separator extends Component {
   }
 }
 
+const minMenuHeight = 20;
+
+const levelFactor = [0.12, 0.16, 0.21];
+
+@connect( store => ({
+    windowSize: store.general.windowSize,
+    fieldSize: store.general.fieldSize,
+    level: store.general.level,
+}))
 export default class Main extends Component {
-  mines = minesLogic.create({preset: 'beginner'});
   state = {
     game: 'NOT_STARTED',
-    time: 0, inputMode: 0,
-    mineCount: this.mines.mine_count,
+    time: 0,
+    inputMode: 0,
   };
+
+  getDimensions(props) {
+    const { windowSize, fieldSize } = props;
+    const nFields1 = 5 + fieldSize * 2;
+    const availableLength = windowSize.height - 2 * separatorWidth - headerHeight - minMenuHeight;
+    const buttonSize = windowSize.width / nFields1;
+    const nFields2 = Math.floor(availableLength / buttonSize);
+
+    return {
+      buttonSize,
+      dimensions: [nFields2, nFields1],
+      delta: availableLength - nFields2 * buttonSize,
+    };
+  }
 
   startTimer = () => {
     this.timerId = setInterval(() => 
@@ -66,9 +96,14 @@ export default class Main extends Component {
     this.startTimer();
   }
 
-  constructor(props) {
-    super(props);
-    this.mines.onGameStateChange((state, oldState) => {
+  initMines(props) {
+    const dims = this.getDimensions(props);
+    const mines = minesLogic.create({
+      dimensions: dims.dimensions,
+      mine_count: Math.round(levelFactor[props.level] * dims.dimensions[0] * dims.dimensions[1]),
+    });
+
+    mines.onGameStateChange((state, oldState) => {
       if(state != oldState) {
         this.setState({game: state})
         if(oldState == 'NOT_STARTED' && state == 'STARTED') {
@@ -76,6 +111,10 @@ export default class Main extends Component {
         }
         if(state == 'WON' || state == 'LOST')
           this.stopTimer();
+        if(state == 'WON')
+          Vibration.vibrate([0, 200, 100, 200, 100, 500]);
+        if(state == 'LOST')
+          Vibration.vibrate();
         if(state == 'NOT_STARTED') {
           this.setState({time: 0});
           this.stopTimer();
@@ -83,34 +122,50 @@ export default class Main extends Component {
       }
     });
 
-    this.mines.onRemainingMineCountChange(mineCount => this.setState({mineCount}))
+    mines.onRemainingMineCountChange(mineCount => this.setState({mineCount}));
+
+    return {
+      game: 'NOT_STARTED',
+      time: 0,
+      inputMode: 0,
+      ...dims,
+      mines,
+      mineCount: mines.mine_count,
+    };
   }
 
-  componentWillMount() {
-    this.dims = Dimensions.get('window');
+  constructor(props) {
+    super(props);
+    this.state = this.initMines(props);
+  }
+
+  componentWillUpdate(nextProps) {
+    if (nextProps.fieldSize !== this.props.fieldSize || nextProps.level !== this.props.level){
+      this.setState({...this.initMines(nextProps)});
+    }
   }
 
   render() {
     return (
       <View>
-        <Separator
-          width={ this.dims.width }
+        <Menu
+          height={ this.state.delta + minMenuHeight }
         />
+        <Separator/>
         <Header
-          mines={ this.mines }
+          mines={ this.state.mines }
           mineCount={ this.state.mineCount }
           gameState={ this.state.game }
-          dims={ this.dims }
           time={ this.state.time }
           inputMode={ this.state.inputMode }
           changeInputMode={ () => this.setState({inputMode: !this.state.inputMode}) }
         />
-        <Separator
-          width={ this.dims.width }/>
+        <Separator/>
         <Board
-          mines={ this.mines }
-          dims={ this.dims }
+          mines={ this.state.mines }
           inputMode={ this.state.inputMode }
+          buttonSize={ this.state.buttonSize }
+          dimensions={ this.state.dimensions }
         />
       </View>
     );

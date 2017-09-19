@@ -4,6 +4,8 @@ import {
   Image,
   StyleSheet,
   TouchableNativeFeedback,
+  TouchableHighlight,
+  Platform,
   Text,
   View,
 } from 'react-native';
@@ -19,10 +21,12 @@ import {
 
 import colors from 'src/colors';
 
+const Touchable = Platform.OS === 'android' ? TouchableNativeFeedback : TouchableHighlight;
+
 class Button extends Component {
   render() {
     return (
-      <TouchableNativeFeedback
+      <Touchable
         onPress={ this.props.onPress }      
         onPressIn={ this.props.onPressIn }
         onPressOut={ this.props.onPressOut }
@@ -38,7 +42,7 @@ class Button extends Component {
           />
           { this.props.children }
         </View>
-      </TouchableNativeFeedback>
+      </Touchable>
     );
   }
 }
@@ -61,10 +65,11 @@ class Smiley extends Component {
 
 class SmileyBtn extends Component {
   state = { pressed: false }
+
   render() {
     return (
       <View
-      style={ {margin: 10} }
+        style={ {margin: elementMargin} }
       >
         <Button
           onPress={ () => this.props.reset() }      
@@ -101,7 +106,7 @@ class FlagBtn extends Component {
   render() {
     return (
       <View
-      style={ {margin: 10} }
+      style={ {margin: elementMargin} }
       >
         <Button
           onPress={ this.props.changeInputMode }   
@@ -125,13 +130,13 @@ class Timer extends Component {
           backgroundColor: 'black',
           width: 80,
           height: 50,
-          margin: 10,
+          margin: elementMargin,
         } }
       >
         <View
           style={ {
             left: 6,
-            top: 2,
+            top: (Platform.OS === 'ios') ? 5 : 2,
           } }
         >
           <View
@@ -139,6 +144,7 @@ class Timer extends Component {
               position: 'absolute',
               width: 80,
               height: 50,
+              backgroundColor: 'transparent',
             } }
           >
             <Text
@@ -157,6 +163,7 @@ class Timer extends Component {
               position: 'absolute',
               width: 80,
               height: 50,
+              backgroundColor: 'transparent',
             } }
           >
             <Text
@@ -181,7 +188,6 @@ class Timer extends Component {
 
 export default class Header extends Component {
   render() {
-    console.log(this.props.mines)
     return (
       <View
         style={ {
@@ -210,9 +216,13 @@ export default class Header extends Component {
   }
 }
 
+const elementMargin = 10;
+const buttonHeight = 60;
+
+export const headerHeight = buttonHeight + 2 * elementMargin;
+
 const smileyDiam = 40;
 const smileySquareSize = 50;
-const buttonHeight = 60;
 
 const smileyBorder = (buttonHeight - smileySquareSize) / 2;
 const smileyMargin = (buttonHeight - smileyDiam) / 2;

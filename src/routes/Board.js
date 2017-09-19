@@ -5,7 +5,9 @@ import {
   StyleSheet,
   Text,
   TouchableNativeFeedback,
-  View
+  TouchableHighlight,
+  Platform,
+  View,
 } from 'react-native';
 import _ from 'lodash';
 
@@ -17,7 +19,13 @@ import {
   mineImage,
 } from 'src/assets/images';
 
+const longPressTime = 5;
+
+const Touchable = Platform.OS === 'android' ? TouchableNativeFeedback : TouchableHighlight;
+
 class Button extends Component {
+  pressDuration = 0;
+
   reveal = () => this.props.mines.reveal([this.props.i, this.props.j])
   mark = () => this.props.mines.mark([this.props.i, this.props.j])
 
@@ -25,9 +33,9 @@ class Button extends Component {
     const { mark, styles } = this.props;
 
     return (
-      <TouchableNativeFeedback
-        onPress={ this.props.inputMode ? this.mark : this.reveal }
-        onLongPress={ this.props.inputMode ? this.reveal : this.mark }
+      <Touchable
+        onPress={ this.props.inputMode ? this.mark : this.reveal } 
+        onPressLong={ this.props.inputMode ? this.reveal : this.mark }
       >
         <View
           style={ [styles.button,
@@ -58,11 +66,10 @@ class Button extends Component {
             }
           </View>
         </View>
-      </TouchableNativeFeedback>
+      </Touchable>
     );
   }
 }
-
 
 class ButtonPressed extends Component {
   render() {
@@ -72,6 +79,7 @@ class ButtonPressed extends Component {
       <View
         style={ [styles.buttonPressed,
           {
+            position: 'absolute',
             top: this.props.y,
             left: this.props.x
           }
@@ -116,44 +124,52 @@ class ButtonPressed extends Component {
 export default class Board extends Component {
   state = {};
 
-  range = _.range(9);
-
   constructor(props) {
     super(props);
+    this.init(props);
+  }
 
-    for (let i = 0; i < 9; i++) {
-      for (let j = 0; j < 9; j++) {
+  init(props) {
+    const { dimensions, mines } = props;
+
+    this.rangeX = _.range(dimensions[0]);
+    this.rangeY = _.range(dimensions[1]);
+
+    for (let i = 0; i < dimensions[0]; i++) {
+      for (let j = 0; j < dimensions[1]; j++) {
         this.state[i + ', ' + j] = undefined;
       }
     }
 
-    this.mines = props.mines;
-
-    this.mines.onCellStateChange((cell, state) => {
+    mines.onCellStateChange((cell, state) => {
       this.setState({[cell[0] + ', ' + cell[1]] : state});
     });
+
+    this.buttonSize = props.buttonSize;
+    const scale = this.buttonSize / (squareDim + 2 * squareBorder);
+    this.styles = styles(scale);
   }
 
-  componentWillMount() {
-    this.buttonDim = this.props.dims.width / 9;
-    const scale = this.buttonDim / (squareDim + 2 * squareBorder);
-    this.styles = styles(scale);
+  componentWillUpdate(nextProps) {
+    if (nextProps.mines.mine_count !== this.props.mines.mine_count || nextProps.dimensions[0] !== this.props.dimensions[0] || nextProps.dimensions[1] !== this.props.dimensions[1]) {
+      this.init(nextProps);
+    }
   }
 
   render() {
     return (
       <View>
-        { this.range.map(i =>
-          this.range.map(j => {
+        { this.rangeX.map(i =>
+          this.rangeY.map(j => {
             const cellState = this.state[i + ', ' + j];
 
             if (isNaN(cellState))
               return (
                 <Button
-                  mines={ this.mines }
+                  mines={ this.props.mines }
                   styles={ this.styles }
-                  x={ this.buttonDim * j }
-                  y={ this.buttonDim * i }
+                  x={ this.buttonSize * j }
+                  y={ this.buttonSize * i }
                   i={ i }
                   j={ j }
                   mark={ cellState }
@@ -164,8 +180,8 @@ export default class Board extends Component {
               return (
                 <ButtonPressed
                   styles={ this.styles }
-                  x={ this.buttonDim * j }
-                  y={ this.buttonDim * i }
+                  x={ this.buttonSize * j }
+                  y={ this.buttonSize * i }
                   nMines={ cellState }
                 />
               )
@@ -225,7 +241,7 @@ const styles = scale => {
       backgroundColor: colors.greyMain,
       height: squareDimPressedScaled,
       width: squareDimPressedScaled,
-      borderWidth: squareBorderPressedScaled,
+      borderWidth: Platform.OS === 'android' ? squareBorderPressedScaled : 1,
       borderColor: colors.greyShade,
     },
     squarePressedExploded: {
@@ -235,7 +251,7 @@ const styles = scale => {
       backgroundColor: colors.red2,
       height: squareDimPressedScaled,
       width: squareDimPressedScaled,
-      borderWidth: squareBorderPressedScaled,
+      borderWidth: Platform.OS === 'android' ? squareBorderPressedScaled : 1,
       borderColor: colors.greyShade,
     },
     nMines: {
