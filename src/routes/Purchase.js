@@ -1,10 +1,17 @@
 import React, { Component } from 'react';
 import {
+  Alert,
   View,
   Text,
 } from 'react-native';
 import { Button as _Button } from 'react-native-elements'
 import InAppBilling from 'react-native-billing';
+
+// lib
+import {
+  getForm,
+  errorHandle,
+} from 'src/lib';
 
 const purchase = () =>
   InAppBilling.open()
@@ -35,6 +42,18 @@ class Button extends Component {
 }
 
 export default class Purchase extends Component {
+  donate() {
+    Alert.alert('Thanks for your support!');
+    getForm("https://www.paypal.com/cgi-bin/webscr", {
+      business: 'orestis.zambounis@gmail.com',
+      cmd:'_donations',
+      item_name:'Orestis Zambounis',
+      item_number:'Minesweeper',
+      currency_code:'USD',
+    }).catch(err => errorHandle(err))
+    this.props.close();
+  }
+
   render () {
     return (
       <View
@@ -102,7 +121,7 @@ export default class Purchase extends Component {
         </Text>
         <Button
           title='Donate' 
-          // backgroundColor='#03051E'
+          onPress={ this.donate.bind(this) }
         />
       </View>
     )
