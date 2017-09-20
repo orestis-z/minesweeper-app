@@ -26,7 +26,7 @@ import {
 import { connect } from 'react-redux';
 
 const longPressTime = 5;
-
+let inputMode = 0;
 
 class Button extends Component {
   pressDuration = 0;
@@ -37,7 +37,6 @@ class Button extends Component {
   shouldComponentUpdate(nextProps) {
     return (
       this.props.mark != nextProps.mark ||
-      this.props.inputMode != nextProps.inputMode ||
       this.props.scale != nextProps.scale
     );
   }
@@ -47,8 +46,8 @@ class Button extends Component {
 
     return (
       <Touchable
-        onPress={ this.props.inputMode ? this.mark : this.reveal } 
-        onLongPress={ this.props.inputMode ? this.reveal : this.mark }
+        onPress={ () => inputMode ? this.mark() : this.reveal() } 
+        onLongPress={ () => inputMode ? this.reveal() : this.mark() }
       >
         <View
           style={ [styles.button,
@@ -179,6 +178,10 @@ export default class Board extends Component {
     }
   }
 
+  componentWillReceiveProps(nextProps) {
+    inputMode = nextProps.inputMode;
+  }
+
   render() {
     const { windowSize } = this.props;
     return (
@@ -204,7 +207,6 @@ export default class Board extends Component {
                   i={ i }
                   j={ j }
                   mark={ cellState }
-                  inputMode={ this.props.inputMode }
                 />
               )
             else
