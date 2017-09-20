@@ -81,16 +81,16 @@ export default class Main extends Component {
   getDimensions(props) {
     const { windowSize, fieldSize, orientation } = props;
     let buttonSize, nFields1, nFields2;
-    const availableLength = windowSize.height - 2 * separatorWidth - headerHeight - minMenuHeight;
+    const availableHeight = windowSize.height - 2 * separatorWidth - headerHeight - minMenuHeight;
 
     if (orientation === 'PORTRAIT') {
       nFields1 = 5 + fieldSize * 2;
       buttonSize = windowSize.width / nFields1;
-      nFields2 = Math.floor(availableLength / buttonSize);
+      nFields2 = Math.floor(availableHeight / buttonSize);
     }
     else {
-      nFields2 = 5 + fieldSize * 2;
-      const buttonSizeTemp = availableLength / nFields2;
+      nFields2 = Math.ceil(availableHeight / windowSize.height * (5 + fieldSize * 2));
+      const buttonSizeTemp = availableHeight / nFields2;
       nFields1 = Math.ceil(windowSize.width / buttonSizeTemp);
       buttonSize = windowSize.width / nFields1;
     }
@@ -98,7 +98,7 @@ export default class Main extends Component {
     return {
       buttonSize,
       dimensions: [nFields2, nFields1],
-      delta: availableLength - nFields2 * buttonSize,
+      delta: availableHeight - nFields2 * buttonSize,
     };
   }
 
@@ -154,7 +154,7 @@ export default class Main extends Component {
     };
   }
 
-  constructor(props) {
+constructor(props) {
     super(props);
     this.state = this.initMines(props);
   }

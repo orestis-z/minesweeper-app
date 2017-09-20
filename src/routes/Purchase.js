@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import {
   Alert,
   View,
+  ScrollView,
   Text,
 } from 'react-native';
 import { Button as _Button } from 'react-native-elements'
@@ -32,14 +33,20 @@ class Button extends Component {
           marginTop: 10,
           borderRadius: 20,
         } }
-        // fontFamily='monospace'
-        backgroundColor='#0E2431'
-        color='#E8D5B7'
+        fontFamily='monospace'
+        backgroundColor='#4E82A7'
+        // color='#E8D5B7'
         {...this.props}
       />
     )
   }
 }
+
+const motivationText = `
+Looks like you are enjoying Minesweeper.
+I do my best to keep this application ad-free and up-to-date.
+So I would like to kindly ask you to support me.
+`
 
 export default class Purchase extends Component {
   donate() {
@@ -56,10 +63,9 @@ export default class Purchase extends Component {
 
   render () {
     return (
-      <View
+      <ScrollView
         style={ {
           flex: 1,
-          // justifyContent: 'space-between',
         } }
       >
         <View
@@ -75,7 +81,7 @@ export default class Purchase extends Component {
               textAlign: 'center',
             } }
           >
-            Looks like you are enjoying Minesweeper.{'\n'}So we would like to kindly ask you to support us.
+            { motivationText }
           </Text>
           <Text style={ {
               textAlign: 'center',
@@ -122,8 +128,13 @@ export default class Purchase extends Component {
         <Button
           title='Donate' 
           onPress={ this.donate.bind(this) }
+          buttonStyle={ {
+            marginTop: 10,
+            marginBottom: 10,
+            borderRadius: 20,
+          } }
         />
-      </View>
+      </ScrollView>
     )
   }
 };

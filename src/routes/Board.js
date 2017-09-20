@@ -48,7 +48,7 @@ class Button extends Component {
     return (
       <Touchable
         onPress={ this.props.inputMode ? this.mark : this.reveal } 
-        onPressLong={ this.props.inputMode ? this.reveal : this.mark }
+        onLongPress={ this.props.inputMode ? this.reveal : this.mark }
       >
         <View
           style={ [styles.button,
