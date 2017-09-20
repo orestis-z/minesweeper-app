@@ -173,7 +173,7 @@ class Options extends Component {
 class More extends Component {
   onSelectLevel(value) {
     if (value === 0)
-      this.props.navigation.navigate('Donate');
+      this.props.purchase();
   }
 
   render() {
@@ -238,7 +238,7 @@ export default class _Menu extends Component {
         />
         <More
           padding={ padding }
-          navigation={ this.props.navigation }
+          purchase={ this.props.purchase }
         />
       </View>
     );

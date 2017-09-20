@@ -1,9 +1,12 @@
 export default function reducer(state=
   {
+    orientation: 'PORTRAIT',
     windowSize: {width: 0, height: 0},
     level: 0,
     fieldSize: 2,
     vibrate: true,
+    gameCounter: 1,
+    purchased: false,
     loaded: false,
   },
   action) {
@@ -12,8 +15,11 @@ export default function reducer(state=
       if (action.payload.general)
         return {
           ...state,
+          level: action.payload.general.level,
           fieldSize: action.payload.general.fieldSize,
           vibrate: action.payload.general.vibrate,
+          gameCounter: action.payload.general.gameCounter,
+          purchased: action.payload.general.purchased,
           loaded: true,
         };
       else
@@ -40,6 +46,11 @@ export default function reducer(state=
       return {
         ...state,
         level: action.payload,
+      };
+    case 'NEW_GAME':
+      return {
+        ...state,
+        gameCounter: state.gameCounter + 1,
       };
     case 'ORIENTATION_CHANGE':
       return {

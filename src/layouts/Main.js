@@ -15,7 +15,7 @@ import { store } from 'src/config';
 import {
     Main as MainScene,
     Loading,
-    Donate,
+    // Donate,
 } from 'src/routes'
 
 // redux
@@ -45,7 +45,7 @@ const logoMinTime = 2;
 const MainSceneNavigator = StackNavigator(
   {
   Main: { screen: MainScene },
-  Donate: { screen: Donate },
+  // Donate: { screen: Donate },
   },
   {
     headerMode: 'screen',

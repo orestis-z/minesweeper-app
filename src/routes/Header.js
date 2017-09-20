@@ -23,6 +23,9 @@ import {
   sunglassesImage,
 } from 'src/assets/images';
 
+// redux
+import { connect } from 'react-redux';
+
 import colors from 'src/colors';
 
 class Button extends Component {
@@ -186,18 +189,26 @@ class Timer extends Component {
   }
 }
 
+@connect()
 export default class Header extends Component {
+  _reset() {
+    this.props.mines.reset();
+    this.props.dispatch({
+      type: 'NEW_GAME',
+    })
+  }
   reset() {
     if (this.props.gameState === 'STARTED' ) {
       Alert.alert('Restart Game?', null,
         [
-          { text: 'OK', onPress: () => this.props.mines.reset() },
+          { text: 'OK', onPress: () => this._reset() },
           { text: 'Cancel', style: 'cancel' },
         ],
         { cancelable: false });
     }
     else
-      this.props.mines.reset();
+      this._reset();
+    
   }
 
   render() {
