@@ -19,7 +19,11 @@ import { createLogger } from 'redux-logger';
 
 // redux logger
 const logger = createLogger({
-  predicate: (getState, action) => action.type !== 'REDUX_STORAGE_SAVE',
+  predicate: (getState, action) => (
+    action.type !== 'REDUX_STORAGE_SAVE' &&
+    action.type !== 'TIME_CHANGE' &&
+    action.type !== 'CELL_STATE_CHANGE'
+  ),
   collapsed: (getState, action, logEntry) => !logEntry.error,
   diff: true,
   duration: true,
@@ -31,6 +35,7 @@ const engine = createEngine('my-save-key');
 engine = filter(engine,
   [
     ['general'],
+    ['game'],
     // ['general', 'vibrate'],
     // ['settingsLocal'],
     // ['settingsRemote'],

@@ -50,6 +50,9 @@ class Button extends Component {
   }
 }
 
+@connect(store => ({
+  gameState: store.game.gameState,
+}))
 class Smiley extends Component {
   render() {
     return (
@@ -81,7 +84,6 @@ class SmileyBtn extends Component {
         >
           <Smiley
             pressed={ this.state.pressed }
-            gameState={ this.props.gameState }
           />
         </Button>
       </View>
@@ -105,6 +107,9 @@ class Flag extends Component {
   }
 }
 
+@connect(store => ({
+  inputMode: store.game.inputMode,
+}))
 class FlagBtn extends Component {
   render() {
     return (
@@ -112,7 +117,10 @@ class FlagBtn extends Component {
       style={ {margin: elementMargin} }
       >
         <Button
-          onPress={ this.props.changeInputMode }   
+          onPress={ () => this.props.dispatch({
+            type: 'INPUT_MODE_CHANGE',
+            payload: !this.props.inputMode,
+          }) }   
         >
           <Flag
             inputMode={ this.props.inputMode }
@@ -189,7 +197,12 @@ class Timer extends Component {
   }
 }
 
-@connect()
+@connect(store => ({
+  gameState: store.game.gameState,
+  time: store.game.time,
+  mineCount: store.game.mineCount,
+  inputMode: store.game.inputMode,
+}))
 export default class Header extends Component {
   _reset() {
     this.props.mines.reset();
@@ -226,11 +239,9 @@ export default class Header extends Component {
         />
         <SmileyBtn
           reset={ this.reset.bind(this) }
-          gameState={ this.props.gameState }
         />
         <FlagBtn
           inputMode={ this.props.inputMode }
-          changeInputMode={ this.props.changeInputMode }
         />
         <Timer
           count={ this.props.time }

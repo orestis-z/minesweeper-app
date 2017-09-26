@@ -28,10 +28,17 @@ import { connect } from 'react-redux';
 const longPressTime = 5;
 let inputMode = 0;
 
+@connect()
 class Button extends Component {
   pressDuration = 0;
 
-  reveal = () => this.props.mines.reveal([this.props.i, this.props.j])
+  reveal = () => {
+    this.props.mines.reveal([this.props.i, this.props.j]);
+    this.props.dispatch({
+      type: 'MINE_FIELD_CONFIG',
+      payload: this.props.mines.mineField(),
+    });
+  }
   mark = () => this.props.mines.mark([this.props.i, this.props.j])
 
   shouldComponentUpdate(nextProps) {
@@ -139,41 +146,75 @@ class ButtonPressed extends Component {
   }
 }
 
-@connect( store => ({
-    windowSize: store.general.windowSize,
+@connect(store => ({
+  windowSize: store.general.windowSize,
+  gameState: store.game.gameState,
+  inputMode: store.game.inputMode,
+  cellStates: store.game.cellStates,
+  dims: store.game.dims,
 }))
 export default class Board extends Component {
-  state = {};
   scale = 1;
 
   constructor(props) {
     super(props);
     this.init(props);
+
+    const { dims, mines } = props; 
+
+    for (let i = 0; i < dims.dimensions[0]; i++) {
+      for (let j = 0; j < dims.dimensions[1]; j++) {
+        if (!isNaN(props.cellStates[i + ',' + j]))
+          mines.reveal([i, j]);
+        else if (props.cellStates[i + ',' + j] === 'MARKED')
+          mines.mark([i, j]);
+      }
+    }
+  }
+
+  reset(props) {
+    const { dims } = props;
+
+    let cellStates = {};
+    for (let i = 0; i < dims.dimensions[0]; i++) {
+      for (let j = 0; j < dims.dimensions[1]; j++) {
+        cellStates[i + ',' + j] = undefined;
+      }
+    }
+    props.dispatch({
+      type: 'SET_CELL_STATES',
+      payload: cellStates,
+    })
   }
 
   init(props) {
-    const { dimensions, mines } = props;
+    const { mines, dims, gameState } = props;
 
-    this.rangeX = _.range(dimensions[0]);
-    this.rangeY = _.range(dimensions[1]);
-
-    for (let i = 0; i < dimensions[0]; i++) {
-      for (let j = 0; j < dimensions[1]; j++) {
-        this.state[i + ', ' + j] = undefined;
-      }
-    }
+    this.rangeX = _.range(dims.dimensions[0]);
+    this.rangeY = _.range(dims.dimensions[1]);
 
     mines.onCellStateChange((cell, state) => {
-      this.setState({[cell[0] + ', ' + cell[1]] : state});
+      props.dispatch({
+        type: 'CELL_STATE_CHANGE',
+        payload: state,
+        i: cell[0],
+        j: cell[1],
+      })
     });
 
-    this.buttonSize = props.buttonSize;
+    this.buttonSize = props.dims.buttonSize;
     this.scale = this.buttonSize / (squareDim + 2 * squareBorder);
     this.styles = styles(this.scale);
   }
 
   componentWillUpdate(nextProps) {
-    if (nextProps.mines.mine_count !== this.props.mines.mine_count || nextProps.dimensions[0] !== this.props.dimensions[0] || nextProps.dimensions[1] !== this.props.dimensions[1]) {
+    if (
+      nextProps.mines.mine_count !== this.props.mines.mine_count ||
+      nextProps.dims.dimensions[0] !== this.props.dims.dimensions[0] ||
+      nextProps.dims.dimensions[1] !== this.props.dims.dimensions[1] ||
+      nextProps.dims.buttonSize !== this.props.dims.buttonSize
+    ) {
+      this.reset(nextProps);
       this.init(nextProps);
     }
   }
@@ -194,7 +235,7 @@ export default class Board extends Component {
       >
         { this.rangeX.map(i =>
           this.rangeY.map(j => {
-            const cellState = this.state[i + ', ' + j];
+            const cellState = this.props.cellStates[i + ',' + j];
 
             if (isNaN(cellState))
               return (

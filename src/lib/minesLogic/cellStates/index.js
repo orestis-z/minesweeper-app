@@ -1,0 +1,17 @@
+export default {
+  UNKNOWN: undefined,
+  MARKED: 'MARKED',
+  QUESTION: 'QUESTION',
+  0: 0,
+  1: 1,
+  2: 2,
+  3: 3,
+  4: 4,
+  5: 5,
+  6: 6,
+  7: 7,
+  8: 8,
+  MINE: 9,
+  EXPLODED_MINE: 10,
+  INCORRECTLY_MARKED_MINE: 11
+};

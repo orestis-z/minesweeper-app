@@ -3,7 +3,6 @@ import {
   View,
   Vibration,
 } from 'react-native';
-import minesLogic from 'mines';
 import Modal from 'react-native-modal'
 
 import Board from './Board';
@@ -13,6 +12,9 @@ import Purchase from './Purchase';
 
 // redux
 import { connect } from 'react-redux';
+
+// lib
+import { minesLogic } from 'src/lib';
 
 import colors from 'src/colors';
 
@@ -59,14 +61,19 @@ const minMenuHeight = 20;
 const levelFactor = [0.12, 0.16, 0.21];
 const purchaseInterval = 10;
 
-@connect( store => ({
-    windowSize: store.general.windowSize,
-    orientation: store.general.orientation,
-    fieldSize: store.general.fieldSize,
-    level: store.general.level,
-    vibrate: store.general.vibrate,
-    gameCounter: store.general.gameCounter,
-    purchased: store.general.purchased,
+@connect(store => ({
+  windowSize: store.general.windowSize,
+  orientation: store.general.orientation,
+  fieldSize: store.general.fieldSize,
+  level: store.general.level,
+  vibrate: store.general.vibrate,
+  gameCounter: store.general.gameCounter,
+  purchased: store.general.purchased,
+  gameState: store.game.gameState,
+  time: store.game.time,
+  inputMode: store.game.inputMode,
+  mineField: store.game.mineField,
+  dims: store.game.dims,
 }))
 export default class Main extends Component {
   static navigationOptions = {
@@ -104,27 +111,39 @@ export default class Main extends Component {
 
   startTimer = () => {
     this.timerId = setInterval(() => 
-      this.setState({time: this.state.time + 1}), 1000);
+      this.props.dispatch({
+        type: 'TIME_CHANGE',
+        payload: this.props.time + 1,
+      }), 1000);
   }
 
   stopTimer = () => clearInterval(this.timerId);
 
   restartTimer = () => {
     this.stopTimer();
-    this.setState({time: 0});
+    this.props.dispatch({
+      type: 'TIME_CHANGE',
+      payload: 0,
+    });
     this.startTimer();
   }
 
-  initMines(props) {
+  initMines(props, mount=true) {
     const dims = this.getDimensions(props);
+    const nMines = Math.round(levelFactor[props.level] * dims.dimensions[0] * dims.dimensions[1])
+    console.log(nMines)
     const mines = minesLogic.create({
       dimensions: dims.dimensions,
-      mine_count: Math.round(levelFactor[props.level] * dims.dimensions[0] * dims.dimensions[1]),
+      mine_count: nMines,
+      mines: mount ? props.mineField : null,
     });
 
     mines.onGameStateChange((state, oldState) => {
       if(state != oldState) {
-        this.setState({game: state})
+        this.props.dispatch({
+          type: 'GAME_STATE_CHANGE',
+          payload: state,
+        });
         if(oldState == 'NOT_STARTED' && state == 'STARTED') {
           this.restartTimer();
         }
@@ -135,28 +154,40 @@ export default class Main extends Component {
         if(this.props.vibrate && state == 'LOST')
           Vibration.vibrate();
         if(state == 'NOT_STARTED') {
-          this.setState({time: 0});
+          this.props.dispatch({
+            type: 'TIME_CHANGE',
+            payload: 0,
+          });
           this.stopTimer();
         }
       }
     });
 
-    mines.onRemainingMineCountChange(mineCount => this.setState({mineCount}));
+    if (props.gameState === 'STARTED' && mount)
+      this.startTimer();
 
-    return {
-      ...this.state,
-      game: 'NOT_STARTED',
-      time: 0,
-      inputMode: 0,
-      ...dims,
-      mines,
-      mineCount: mines.mine_count,
-    };
+    mines.onRemainingMineCountChange(mineCount => props.dispatch({
+      type: 'MINE_COUNT_CHANGE',
+      payload: mineCount,
+    }));
+
+    props.dispatch({
+      type: 'SET_STATE',
+      payload: {
+        // gameState: 'NOT_STARTED',
+        // time: 0,
+        // inputMode: 0,
+        mineCount: mines.mine_count,
+        dims,
+      }
+    })
+
+    return mines;
   }
 
-constructor(props) {
+  constructor(props) {
     super(props);
-    this.state = this.initMines(props);
+    this.state.mines = this.initMines(props);
   }
 
   componentWillUpdate(nextProps) {
@@ -166,7 +197,7 @@ constructor(props) {
       nextProps.windowSize.width !== this.props.windowSize.width ||
       nextProps.windowSize.height !== this.props.windowSize.height
     ) {
-      this.setState({...this.initMines(nextProps)});
+      this.setState({mines: this.initMines(nextProps, false)});
     }
   }
 
@@ -174,25 +205,17 @@ constructor(props) {
     return (
       <View>
         <Menu
-          height={ this.state.delta + minMenuHeight }
+          height={ this.props.dims.delta + minMenuHeight }
           purchase={ () => this.setState({requestPurchase: true}) }
           // navigation={ this.props.navigation }
         />
         <Separator/>
         <Header
           mines={ this.state.mines }
-          mineCount={ this.state.mineCount }
-          gameState={ this.state.game }
-          time={ this.state.time }
-          inputMode={ this.state.inputMode }
-          changeInputMode={ () => this.setState({inputMode: !this.state.inputMode}) }
         />
         <Separator/>
         <Board
           mines={ this.state.mines }
-          inputMode={ this.state.inputMode }
-          buttonSize={ this.state.buttonSize }
-          dimensions={ this.state.dimensions }
         />
         <Modal
           isVisible={ 
@@ -207,7 +230,10 @@ constructor(props) {
             } }
           >
             <Purchase
-              close={ () => this.setState({counter: this.state.counter + 1, requestPurchase: false}) }
+              close={ () => this.setState({
+                counter: this.state.counter + 1,
+                requestPurchase: false,
+              }) }
             />
           </View>
         </Modal>
