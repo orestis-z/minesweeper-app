@@ -119,12 +119,16 @@ export default class Main extends Component {
 
   stopTimer = () => clearInterval(this.timerId);
 
-  restartTimer = () => {
+  clearTimer = () => {
     this.stopTimer();
     this.props.dispatch({
       type: 'TIME_CHANGE',
       payload: 0,
     });
+  };
+
+  restartTimer = () => {
+    this.clearTimer();
     this.startTimer();
   }
 
@@ -138,13 +142,13 @@ export default class Main extends Component {
     });
 
     mines.onGameStateChange((state, oldState) => {
-      if(state != oldState) {
+      if (state != oldState) {
         this.props.dispatch({
           type: 'GAME_STATE_CHANGE',
           payload: state,
         });
         if(oldState == 'NOT_STARTED' && state == 'STARTED') {
-          this.restartTimer();
+          this.startTimer();
         }
         if(state == 'WON' || state == 'LOST')
           this.stopTimer();
@@ -162,8 +166,8 @@ export default class Main extends Component {
       }
     });
 
-    if (props.gameState === 'STARTED' && mount)
-      this.startTimer();
+    if (!mount)
+      this.clearTimer();
 
     mines.onRemainingMineCountChange(mineCount => props.dispatch({
       type: 'MINE_COUNT_CHANGE',
@@ -211,6 +215,7 @@ export default class Main extends Component {
         <Separator/>
         <Header
           mines={ this.state.mines }
+          clearTimer={ this.clearTimer }
         />
         <Separator/>
         <Board

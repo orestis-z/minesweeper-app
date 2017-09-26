@@ -206,6 +206,7 @@ class Timer extends Component {
 export default class Header extends Component {
   _reset() {
     this.props.mines.reset();
+    this.props.clearTimer();
     this.props.dispatch({
       type: 'NEW_GAME',
     })
