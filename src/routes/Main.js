@@ -131,7 +131,6 @@ export default class Main extends Component {
   initMines(props, mount=true) {
     const dims = this.getDimensions(props);
     const nMines = Math.round(levelFactor[props.level] * dims.dimensions[0] * dims.dimensions[1])
-    console.log(nMines)
     const mines = minesLogic.create({
       dimensions: dims.dimensions,
       mine_count: nMines,

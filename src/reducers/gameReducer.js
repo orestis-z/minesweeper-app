@@ -1,3 +1,5 @@
+import { Dimensions } from 'react-native';
+
 export default function reducer(state=
   {
     cellStates: {},
@@ -15,7 +17,10 @@ export default function reducer(state=
   action) {
   switch (action.type) {
     case 'REDUX_STORAGE_LOAD':
-      if (action.payload.game)
+      if (
+        action.payload.game &&
+        action.payload.general.windowSize.width === Dimensions.get('window').width &&
+        action.payload.general.windowSize.height === Dimensions.get('window').height)
         return {
           ...state,
           cellStates: action.payload.game.cellStates,
@@ -70,7 +75,7 @@ export default function reducer(state=
         ...state,
         mineField: action.payload,
       };
-    case 'ORIENTATION_CHANGE':
+    // case 'ORIENTATION_CHANGE':
     case 'NEW_GAME':
     case 'FIELD_SIZE':
     case 'LEVEL':
