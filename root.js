@@ -21,4 +21,4 @@ export default class ReactNativeBaseProject extends Component {
   }
 };
 
-AppRegistry.registerComponent('MineSweeperTest', () => ReactNativeBaseProject);
+AppRegistry.registerComponent('Minesweeper', () => ReactNativeBaseProject);

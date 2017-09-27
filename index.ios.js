@@ -1,3 +1,3 @@
-import MineSweeperTest from './root';
+import Minesweeper from './root';
 
-export default MineSweeperTest;
+export default Minesweeper;
