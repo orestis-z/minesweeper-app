@@ -16,13 +16,14 @@ import {
 
 const purchase = () =>
   InAppBilling.open()
-    .then(() => InAppBilling.purchase('android.test.purchased'))
+    .then(() => InAppBilling.purchase('minesweeper_5.00'))
     .then((details) => {
       console.log("You purchased: ", details)
       return InAppBilling.close()
     })
     .catch((err) => {
       console.log(err);
+      return InAppBilling.close()
     });
 
 class Button extends Component {
