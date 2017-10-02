@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import {
-  Alert,
   Image,
   StyleSheet,
   Platform,
   Text,
   View,
 } from 'react-native';
+import { MaterialDialog } from 'react-native-material-dialog';
 
 // components
 import {
@@ -204,6 +204,7 @@ class Timer extends Component {
   inputMode: store.game.inputMode,
 }))
 export default class Header extends Component {
+  state={ dialogVisible: false }
   _reset() {
     this.props.mines.reset();
     this.props.clearTimer();
@@ -213,12 +214,7 @@ export default class Header extends Component {
   }
   reset() {
     if (this.props.gameState === 'STARTED' ) {
-      Alert.alert('Restart Game?', null,
-        [
-          { text: 'OK', onPress: this._reset.bind(this) },
-          { text: 'Cancel', style: 'cancel' },
-        ],
-        { cancelable: false });
+      this.setState({dialogVisible: true})
     }
     else
       this._reset();
@@ -235,6 +231,15 @@ export default class Header extends Component {
           backgroundColor: colors.greyMain,
         } }
       >
+        <MaterialDialog
+          title={'Restart Game?'}
+          visible={this.state.dialogVisible}
+          onOk={() => {
+            this.setState({dialogVisible: false})
+            this._reset();
+          }}
+          onCancel={() =>  this.setState({dialogVisible: false}) }
+        />
         <View/>
         <Timer
           count={ this.props.mineCount }
