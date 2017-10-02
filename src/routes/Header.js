@@ -235,6 +235,7 @@ export default class Header extends Component {
           backgroundColor: colors.greyMain,
         } }
       >
+        <View/>
         <Timer
           count={ this.props.mineCount }
         />
@@ -247,6 +248,7 @@ export default class Header extends Component {
         <Timer
           count={ this.props.time }
         />
+        <View/>
       </View>
     );
   }

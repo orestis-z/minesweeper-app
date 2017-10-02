@@ -22,9 +22,12 @@ import {
 // redux
 import { connect } from 'react-redux';
 
+// lib
+import { normalize } from 'src/lib';
+
 import colors from 'src/colors';
 
-const fontSize = 14;
+const fontSize = normalize(14);
 const padding = 8;
 const menuOptionsMarginTop = 10;
 
@@ -68,7 +71,7 @@ class Game extends Component {
             value={ 0 }
           >
             <Text
-              style={ { color: 'black' } }
+              style={ { color: 'black', fontSize } }
             >
               { (this.props.level === 0 ? ' ✓ ' : '') + ' Beginner'}
             </Text>
@@ -77,7 +80,7 @@ class Game extends Component {
             value={ 1 }
           >
             <Text
-              style={ { color: 'black' } }
+              style={ { color: 'black', fontSize } }
             >
               { (this.props.level === 1 ? ' ✓ ' : '') + ' Intermediate'}
             </Text>
@@ -86,7 +89,7 @@ class Game extends Component {
             value={ 2 }
           >
             <Text
-              style={ { color: 'black' } }
+              style={ { color: 'black', fontSize } }
             >
               { (this.props.level === 2 ? ' ✓ ' : '') + ' Expert'}
             </Text>
@@ -133,7 +136,7 @@ class Options extends Component {
           >
             <View>
               <Text
-                style={ { color: 'black' } }
+                style={ { color: 'black', fontSize } }
               >
                 { ' Size:' }
               </Text>
@@ -154,8 +157,8 @@ class Options extends Component {
           >
             <CheckBox
               label="Vibrate"
-              labelStyle={ { color: 'black' } }
-              size={30}
+              labelStyle={ { color: 'black', fontSize } }
+              size={ fontSize * 1.7 }
               checked={ this.props.vibrate }
               checkedIconName='checkbox-marked-outline'
               onPress={ () => this.props.dispatch({
@@ -204,7 +207,7 @@ class More extends Component {
             value={ 0 }
           >
             <Text
-              style={ { color: 'black' } }
+              style={ { color: 'black', fontSize } }
             >
               { ' Pay what you want' }
             </Text>

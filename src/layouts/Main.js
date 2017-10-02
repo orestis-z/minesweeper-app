@@ -7,6 +7,7 @@ import {
 } from 'react-native';
 import { StackNavigator } from 'react-navigation';
 import Orientation from 'react-native-orientation';
+import Device from 'react-native-device-detection';
 
 // config
 import { store } from 'src/config';
@@ -34,13 +35,17 @@ const _orientationDidChange = ({ window: { width, height } }) => {
   })
 }
 
-Orientation.lockToPortrait();
+if (Device.isTablet)
+  Orientation.lockToLandscape();
+else
+  Orientation.lockToPortrait();
+
 
 Dimensions.addEventListener('change', _orientationDidChange);
 
 _orientationDidChange({window: Dimensions.get('window')});
 
-const logoMinTime = 2;
+const logoMinTime = __DEV__ ? 0 : 2;
 
 const MainSceneNavigator = StackNavigator(
   {

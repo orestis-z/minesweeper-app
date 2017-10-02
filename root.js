@@ -11,7 +11,7 @@ if (__DEV__)
   Promise = require("bluebird"); // better warnings for promises
 
 @codePush
-export default class ReactNativeBaseProject extends Component {
+export default class MinesweeperOriginal extends Component {
   render() {
     return (
       <MenuContext>
@@ -21,4 +21,4 @@ export default class ReactNativeBaseProject extends Component {
   }
 };
 
-AppRegistry.registerComponent('Minesweeper', () => ReactNativeBaseProject);
+AppRegistry.registerComponent('MinesweeperOriginal', () => MinesweeperOriginal);

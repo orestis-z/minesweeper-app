@@ -3,7 +3,8 @@ import {
   View,
   Vibration,
 } from 'react-native';
-import Modal from 'react-native-modal'
+import Modal from 'react-native-modal';
+import Device from 'react-native-device-detection';
 
 import Board from './Board';
 import Header, { headerHeight } from './Header';
@@ -14,7 +15,7 @@ import Purchase from './Purchase';
 import { connect } from 'react-redux';
 
 // lib
-import { minesLogic } from 'src/lib';
+import { minesLogic, normalize } from 'src/lib';
 
 import colors from 'src/colors';
 
@@ -57,7 +58,7 @@ class Separator extends Component {
   }
 }
 
-const minMenuHeight = 20;
+const minMenuHeight = normalize(20);
 const levelFactor = [0.12, 0.16, 0.21];
 const purchaseInterval = 10;
 
@@ -85,18 +86,25 @@ export default class Main extends Component {
     requestPurchase: false,
   };
 
+  getNFields(fieldSize) {
+    if (Device.isTablet)
+      return 8 + fieldSize * 4;
+    else
+      return 5 + fieldSize * 2;
+  }
+
   getDimensions(props) {
     const { windowSize, fieldSize, orientation } = props;
     let buttonSize, nFields1, nFields2;
     const availableHeight = windowSize.height - 2 * separatorWidth - headerHeight - minMenuHeight;
 
     if (orientation === 'PORTRAIT') {
-      nFields1 = 5 + fieldSize * 2;
+      nFields1 = this.getNFields(fieldSize);
       buttonSize = windowSize.width / nFields1;
       nFields2 = Math.floor(availableHeight / buttonSize);
     }
     else {
-      nFields2 = Math.ceil(availableHeight / windowSize.height * (5 + fieldSize * 2));
+      nFields2 = Math.ceil(availableHeight / windowSize.height * this.getNFields(fieldSize));
       const buttonSizeTemp = availableHeight / nFields2;
       nFields1 = Math.ceil(windowSize.width / buttonSizeTemp);
       buttonSize = windowSize.width / nFields1;

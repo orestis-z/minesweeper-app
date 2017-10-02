@@ -2,7 +2,7 @@ export default function reducer(state=
   {
     orientation: 'PORTRAIT',
     windowSize: {width: 0, height: 0},
-    level: 0,
+    level: 1,
     fieldSize: 2,
     vibrate: true,
     gameCounter: 1,
