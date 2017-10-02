@@ -5,7 +5,6 @@ import {
 import {
   Dimensions,
 } from 'react-native';
-import { StackNavigator } from 'react-navigation';
 import Orientation from 'react-native-orientation';
 import Device from 'react-native-device-detection';
 
@@ -16,7 +15,6 @@ import { store } from 'src/config';
 import {
     Main as MainScene,
     Loading,
-    // Donate,
 } from 'src/routes'
 
 // redux
@@ -47,16 +45,6 @@ _orientationDidChange({window: Dimensions.get('window')});
 
 const logoMinTime = __DEV__ ? 0 : 2;
 
-const MainSceneNavigator = StackNavigator(
-  {
-  Main: { screen: MainScene },
-  // Donate: { screen: Donate },
-  },
-  {
-    headerMode: 'screen',
-  }
-)
-
 @connect( store => ({
     loaded: store.general.loaded,
 }))
@@ -73,7 +61,7 @@ export default class Main extends Component {
             style={ {flex: 1} }
           >
             { this.props.loaded && this.state.timeOver ?
-              <MainSceneNavigator/>
+              <MainScene/>
             :
               <Loading/>
             }

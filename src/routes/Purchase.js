@@ -12,7 +12,11 @@ import InAppBilling from 'react-native-billing';
 import {
   getForm,
   errorHandle,
+  normalize,
 } from 'src/lib';
+
+const fontSize = normalize(14);
+const inAppPurchase = true;
 
 const purchase = () =>
   InAppBilling.open()
@@ -31,7 +35,7 @@ class Button extends Component {
     return (
       <_Button
         buttonStyle={ {
-          marginTop: 10,
+          margin: 10,
           borderRadius: 20,
         } }
         fontFamily='monospace'
@@ -45,8 +49,8 @@ class Button extends Component {
 
 const motivationText = `
 Looks like you are enjoying Minesweeper.
-I do my best to keep this application ad-free and up-to-date.
-So I would like to kindly ask you to support me.
+As a student I do my best to keep this application ad-free and up-to-date.
+Therefore I would like to kindly ask you to support me.
 `
 
 export default class Purchase extends Component {
@@ -80,60 +84,68 @@ export default class Purchase extends Component {
           <Text style={ {
               color:'black',
               textAlign: 'center',
+              fontSize,
             } }
           >
             { motivationText }
           </Text>
           <Text style={ {
               textAlign: 'center',
-              marginTop: 10,
-              color:'black'
+              // marginTop: 5,
+              color:'black',
+              fontSize,
             } }
           >
             You can pay what you want:
           </Text>
         </View>
-        <Button
-          title='USD 1.00'
-          onPress={ () => purchase(1) }
-        />
-        <Button
-          title='USD 2.00'
-          onPress={ () => purchase(2) }
-        />
-        <Button
-          title='USD 3.00'
-          onPress={ () => purchase(3) }
-        />
-        <Button
-          title='USD 4.00'
-          onPress={ () => purchase(4) }
-        />
-        <Button
-          title='USD 5.00'
-          onPress={ () => purchase(5) }
-        />
-        <Button
-          title='USD 0.00'
-          onPress={ () => this.props.close() }
-        />
-        <Text
-          style={ {
-            textAlign: 'center',
-            marginTop: 10,
-            color:'black',
-          } }
-        >
-          or
-        </Text>
+        { inAppPurchase ?
+          <View>
+            <Button
+              title='USD 1.00'
+              onPress={ () => purchase(1) }
+            />
+            <Button
+              title='USD 2.00'
+              onPress={ () => purchase(2) }
+            />
+            <Button
+              title='USD 3.00'
+              onPress={ () => purchase(3) }
+            />
+            <Button
+              title='USD 4.00'
+              onPress={ () => purchase(4) }
+            />
+            <Button
+              title='USD 5.00'
+              onPress={ () => purchase(5) }
+            />
+            <Button
+              title='USD 0.00'
+              onPress={ () => this.props.close() }
+            />
+            <Text
+              style={ {
+                textAlign: 'center',
+                color:'black',
+                fontSize,
+              } }
+            >
+              or
+            </Text>
+          </View>
+        :
+          null
+        }
         <Button
           title='Donate' 
           onPress={ this.donate.bind(this) }
-          buttonStyle={ {
-            marginTop: 10,
-            marginBottom: 10,
-            borderRadius: 20,
-          } }
+          // buttonStyle={ {
+          //   marginTop: 10,
+          //   marginBottom: 10,
+          //   borderRadius: 20,
+          // } }
         />
       </ScrollView>
     )

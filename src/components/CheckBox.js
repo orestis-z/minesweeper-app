@@ -48,22 +48,22 @@ export default function CheckBox(props) {
   );
 }
 
-CheckBox.propTypes = {
-  size: PropTypes.number,
-  checked: PropTypes.bool,
-  label: PropTypes.string,
-  labelStyle: Text.propTypes.style,
-  iconStyle: Text.propTypes.style,
-  checkedIconStyle: Text.propTypes.style,
-  color: PropTypes.string,
-  backgroundColor: PropTypes.string,
-  onPress: PropTypes.func,
-  underlayColor: PropTypes.string,
-  activeOpacity: PropTypes.number,
-  borderRadius: PropTypes.number,
-  uncheckedIconName: PropTypes.string,
-  checkedIconName: PropTypes.string,
-};
+// CheckBox.propTypes = {
+//   size: PropTypes.number,
+//   checked: PropTypes.bool,
+//   label: PropTypes.string,
+//   labelStyle: Text.propTypes.style,
+//   iconStyle: Text.propTypes.style,
+//   checkedIconStyle: Text.propTypes.style,
+//   color: PropTypes.string,
+//   backgroundColor: PropTypes.string,
+//   onPress: PropTypes.func,
+//   underlayColor: PropTypes.string,
+//   activeOpacity: PropTypes.number,
+//   borderRadius: PropTypes.number,
+//   uncheckedIconName: PropTypes.string,
+//   checkedIconName: PropTypes.string,
+// };
 
 CheckBox.defaultProps = {
   size: 30,

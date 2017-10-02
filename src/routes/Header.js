@@ -215,7 +215,7 @@ export default class Header extends Component {
     if (this.props.gameState === 'STARTED' ) {
       Alert.alert('Restart Game?', null,
         [
-          { text: 'OK', onPress: () => this._reset() },
+          { text: 'OK', onPress: this._reset.bind(this) },
           { text: 'Cancel', style: 'cancel' },
         ],
         { cancelable: false });
