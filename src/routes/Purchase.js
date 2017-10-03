@@ -16,7 +16,7 @@ import {
 } from 'src/lib';
 
 const fontSize = normalize(14);
-const inAppPurchase = true;
+const inAppPurchase = false;
 
 const purchase = () =>
   InAppBilling.open()
