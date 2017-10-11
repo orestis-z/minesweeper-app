@@ -185,9 +185,6 @@ export default class Main extends Component {
     props.dispatch({
       type: 'SET_STATE',
       payload: {
-        // gameState: 'NOT_STARTED',
-        // time: 0,
-        // inputMode: 0,
         mineCount: mines.mine_count,
         dims,
       }
@@ -218,7 +215,6 @@ export default class Main extends Component {
         <Menu
           height={ this.props.dims.delta + minMenuHeight }
           purchase={ () => this.setState({requestPurchase: true}) }
-          // navigation={ this.props.navigation }
         />
         <Separator/>
         <Header

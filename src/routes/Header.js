@@ -205,6 +205,7 @@ class Timer extends Component {
 }))
 export default class Header extends Component {
   state={ dialogVisible: false }
+  
   _reset() {
     this.props.mines.reset();
     this.props.clearTimer();
@@ -212,6 +213,7 @@ export default class Header extends Component {
       type: 'NEW_GAME',
     })
   }
+
   reset() {
     if (this.props.gameState === 'STARTED' ) {
       this.setState({dialogVisible: true})

@@ -5,11 +5,12 @@ import randomlyPlaceMines from './randomlyPlaceMines';
 import {assign, map} from 'lodash';
 
 export default (options) => {
+  const opt = options;
   const gameStateChangeListeners = [];
   const cellStateChangeListeners = [];
   const remainingMineCountListeners = [];
   const timerChangeListeners = [];
-  const config = configuration(options);
+  let config = configuration(options);
   const visibleField = field(config.dimensions, config.mine_count);
 
   let intervalToken = null;
@@ -33,6 +34,7 @@ export default (options) => {
   const notifyTimerChangeListeners = notifyListeners.bind(null, timerChangeListeners);
 
   const reset = () => {
+    config = configuration({dimensions: opt.dimensions, mine_count: opt.mine_count});
     const previousElapsedTime = elapsedTime;
     const previousState = state;
     const previousRemainingMines = visibleField.remainingMineCount();

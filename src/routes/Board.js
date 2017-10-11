@@ -239,6 +239,8 @@ export default class Board extends Component {
 
   render() {
     const { windowSize, highlight } = this.props;
+    const nCols = this.rangeY.length;
+
     return (
       <View
         style={ {
@@ -250,6 +252,7 @@ export default class Board extends Component {
         { this.rangeX.map(i =>
           this.rangeY.map(j => {
             const cellState = this.props.cellStates[i + ',' + j];
+            const key = nCols * i + j;
 
             if (isNaN(cellState))
               return (
@@ -262,6 +265,7 @@ export default class Board extends Component {
                   i={ i }
                   j={ j }
                   mark={ cellState }
+                  key={ key }
                 />
               )
             else
@@ -272,6 +276,7 @@ export default class Board extends Component {
                   x={ this.buttonSize * j }
                   y={ this.buttonSize * i }
                   nMines={ cellState }
+                  key={ key }
                 />
               )
           })
