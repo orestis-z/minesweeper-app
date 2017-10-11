@@ -13,6 +13,7 @@ export default function reducer(state=
       dimensions: [0, 0],
       delta: 0,
     },
+    highlight: {on: false, pos: {}},
   },
   action) {
   switch (action.type) {
@@ -84,7 +85,15 @@ export default function reducer(state=
         cellStates: {},
         gameState: 'NOT_STARTED',
         mineField: undefined,
-      }
+      };
+    case 'HIGHLIGHT':
+      return {
+        ...state,
+        highlight: {
+          on: action.payload,
+          pos: action.pos,
+        },
+      };
     default:
       return state;
   };

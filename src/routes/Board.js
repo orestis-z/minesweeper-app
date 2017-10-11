@@ -5,6 +5,7 @@ import {
   Text,
   Platform,
   View,
+  Vibration,
 } from 'react-native';
 import _ from 'lodash';
 
@@ -48,13 +49,25 @@ class Button extends Component {
     );
   }
 
+  onLongPress() {
+    this.props.dispatch({
+      type: 'HIGHLIGHT',
+      payload: true,
+      pos: {x: this.props.x, y: this.props.y},
+    });
+    setTimeout(() => this.props.dispatch({
+      type: 'HIGHLIGHT',
+      payload: false,
+    }), 100);
+  }
+
   render() {
     const { mark, styles } = this.props;
 
     return (
       <Touchable
         onPress={ () => inputMode ? this.mark() : this.reveal() } 
-        onLongPress={ () => inputMode ? this.reveal() : this.mark() }
+        onLongPress={ () => {this.onLongPress(); inputMode ? this.reveal() : this.mark()} }
       >
         <View
           style={ [styles.button,
@@ -152,6 +165,7 @@ class ButtonPressed extends Component {
   inputMode: store.game.inputMode,
   cellStates: store.game.cellStates,
   dims: store.game.dims,
+  highlight: store.game.highlight,
 }))
 export default class Board extends Component {
   scale = 1;
@@ -224,7 +238,7 @@ export default class Board extends Component {
   }
 
   render() {
-    const { windowSize } = this.props;
+    const { windowSize, highlight } = this.props;
     return (
       <View
         style={ {
@@ -262,6 +276,21 @@ export default class Board extends Component {
               )
           })
         ) }
+        { highlight.on ?
+          <View
+            style={ {
+              position: 'absolute',
+              top: highlight.pos.y - this.buttonSize,
+              left: highlight.pos.x - this.buttonSize,
+              backgroundColor: 'white',
+              height: this.buttonSize * 3,
+              width: this.buttonSize * 3,
+              opacity: 0.2,
+            } }
+          />
+        :
+          null
+        }
       </View>
     );
   }
