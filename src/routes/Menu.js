@@ -154,13 +154,15 @@ class Options extends Component {
           </MenuOption>
           <MenuOption
             value={ 1 }
+            onSelect={ () => {this.props.dispatch({
+              type: 'VIBRATE',
+              payload: !this.props.vibrate,
+            }); return false;} }
           >
             <CheckBox
               label="Vibrate"
               labelStyle={ { color: 'black', fontSize } }
-              size={ fontSize * 1.7 }
               checked={ this.props.vibrate }
-              checkedIconName='checkbox-marked-outline'
               onPress={ () => this.props.dispatch({
                 type: 'VIBRATE',
                 payload: !this.props.vibrate,

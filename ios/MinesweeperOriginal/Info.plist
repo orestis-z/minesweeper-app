@@ -51,12 +51,13 @@
 			</dict>
 		</dict>
 	</dict>
+	<key>CodePushDeploymentKey</key>
+	<string>86Is_WC6GXnI8mwh7w_ng2zW2TTC4728e975-55e6-47a0-aa3b-ce92f7981d88</string>
 	<key>UIAppFonts</key>
 	<array>
-		<string>addlg.tff</string>
-		<string>easports.ttf</string>
 		<string>coolvetica.ttf</string>
 		<string>digital.ttf</string>
+		<string>easports.ttf</string>
 		<string>Entypo.ttf</string>
 		<string>EvilIcons.ttf</string>
 		<string>Feather.ttf</string>
@@ -69,7 +70,5 @@
 		<string>SimpleLineIcons.ttf</string>
 		<string>Zocial.ttf</string>
 	</array>
-	<key>CodePushDeploymentKey</key>
-	<string>86Is_WC6GXnI8mwh7w_ng2zW2TTC4728e975-55e6-47a0-aa3b-ce92f7981d88</string>
 </dict>
 </plist>
