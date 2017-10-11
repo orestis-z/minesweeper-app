@@ -101,8 +101,8 @@ class Game extends Component {
 }
 
 @connect( store => ({
-    fieldSize: store.general.fieldSize,
-    vibrate: store.general.vibrate,
+  fieldSize: store.general.fieldSize,
+  vibrate: store.general.vibrate,
 }))
 class Options extends Component {
   state={ vibrate: false };
@@ -141,14 +141,14 @@ class Options extends Component {
                 { ' Size:' }
               </Text>
               <Slider
-                value={ this.props.fieldSize }
+                value={ 4 - this.props.fieldSize }
                 step={ 1 }
                 minimumValue={ 0 }
                 maximumValue={ 4 }
                 onValueChange={ value => this.props.dispatch({
                   type: 'FIELD_SIZE',
-                  payload: value,
-                })  }
+                  payload: 4 - value,
+                }) }
               />
             </View>
           </MenuOption>
