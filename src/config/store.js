@@ -16,6 +16,7 @@ import filter from 'redux-storage-decorator-filter'
 import reduxCatch from 'redux-catch';
 import thunk from 'redux-thunk';
 import { createLogger } from 'redux-logger';
+import { admob } from 'src/middleware';
 
 // redux logger
 const logger = createLogger({
@@ -51,7 +52,7 @@ function errorHandler(error, getState, lastAction, dispatch) {
    errorHandle(error);
 }
 
-let middleware = [thunk, storageMiddleware, reduxCatch(errorHandler)];
+let middleware = [thunk, admob, storageMiddleware, reduxCatch(errorHandler)];
 
 if (__DEV__)
   middleware.push(logger);

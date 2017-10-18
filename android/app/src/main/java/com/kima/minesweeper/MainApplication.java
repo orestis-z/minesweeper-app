@@ -3,6 +3,7 @@ package com.kima.minesweeper;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.sbugert.rnadmob.RNAdMobPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.github.yamill.orientation.OrientationPackage;
 import com.microsoft.codepush.react.CodePush;
@@ -11,6 +12,7 @@ import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
+import com.google.android.gms.ads.MobileAds;
 
 import java.util.Arrays;
 import java.util.List;
@@ -33,6 +35,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new RNAdMobPackage(),
             new VectorIconsPackage(),
             new OrientationPackage(),
             new CodePush(null, getApplicationContext(), BuildConfig.DEBUG),
@@ -55,5 +58,6 @@ public class MainApplication extends Application implements ReactApplication {
   public void onCreate() {
     super.onCreate();
     SoLoader.init(this, /* native exopackage */ false);
+    MobileAds.initialize(this, "ca-app-pub-6233263635773218~1366804910");
   }
 }

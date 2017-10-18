@@ -13,8 +13,8 @@ import { store } from 'src/config';
 
 // routes
 import {
-    Main as MainScene,
-    Loading,
+  Main as MainScene,
+  Loading,
 } from 'src/routes'
 
 // redux
