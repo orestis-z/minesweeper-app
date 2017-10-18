@@ -167,6 +167,7 @@ class Options extends Component {
                 type: 'VIBRATE',
                 payload: !this.props.vibrate,
               }) }
+              size={ fontSize * 1.7 }
             />
           </MenuOption>
         </MenuOptions>

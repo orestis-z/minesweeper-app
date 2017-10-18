@@ -6,6 +6,9 @@ import {
   StyleSheet,
   CheckBox as _CheckBox,
 } from 'react-native';
+import Device from 'react-native-device-detection';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+
 
 export default function CheckBox(props) {
   const iconName = props.checked ? props.checkedIconName : props.uncheckedIconName;
@@ -21,20 +24,45 @@ export default function CheckBox(props) {
   function onPress() {
     props.onPress(!props.checked);
   }
-
-  return (
-    <View
-      style={{flexDirection: 'row', alignItems: 'center'}}
-    >
-      <_CheckBox
-        value={props.checked}
-        onValueChange={onPress}
-      />
-      <Text
-        style={[styles.label, props.labelStyle]}
+  if (Device.isAndroid)
+    return (
+      <View
+        style={{flexDirection: 'row', alignItems: 'center'}}
       >
-        { props.label }
-      </Text>
-    </View>
-  );
+        <_CheckBox
+          value={ props.checked }
+          onValueChange={ onPress }
+        />
+        <Text
+          style={[styles.label, props.labelStyle]}
+        >
+          { props.label }
+        </Text>
+      </View>
+    );
+  else
+    return (
+      <Icon.Button
+        name={ props.checked ? props.checkedIconName : props.uncheckedIconName }
+        size={ props.size }
+        backgroundColor={ props.backgroundColor }
+        underlayColor={ props.underlayColor }
+        color={ props.color }
+        onPress={ onPress }
+      >
+        <Text
+          style={ props.labelStyle }
+        >
+          { props.label }
+        </Text>
+      </Icon.Button>
+    );
 }
+
+CheckBox.defaultProps = {
+  color: 'black',
+  backgroundColor: 'transparent',
+  underlayColor: 'transparent',
+  uncheckedIconName: 'checkbox-blank-outline',
+  checkedIconName: 'checkbox-marked-outline',
+};

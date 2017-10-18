@@ -7,6 +7,7 @@ import {
 } from 'react-native';
 import { Button as _Button } from 'react-native-elements'
 import InAppBilling from 'react-native-billing';
+import Device from 'react-native-device-detection';
 
 // lib
 import {
@@ -16,16 +17,17 @@ import {
 } from 'src/lib';
 
 const fontSize = normalize(14);
-const inAppPurchase = false;
+const inAppPurchase = true;
+const donate = false;
 
 const purchase = () =>
   InAppBilling.open()
     .then(() => InAppBilling.purchase('minesweeper_5.00'))
-    .then((details) => {
+    .then(details => {
       console.log("You purchased: ", details)
       return InAppBilling.close()
     })
-    .catch((err) => {
+    .catch(err => {
       console.log(err);
       return InAppBilling.close()
     });
@@ -38,7 +40,8 @@ class Button extends Component {
           margin: 10,
           borderRadius: 20,
         } }
-        fontFamily='monospace'
+        fontFamily={ Device.isAndroid ? 'monospace' : 'Avenir Next' }
+        // fontWeight={ Device.isIos && 'bold' }
         backgroundColor='#4E82A7'
         // color='#E8D5B7'
         {...this.props}
@@ -125,28 +128,36 @@ export default class Purchase extends Component {
               title='USD 0.00'
               onPress={ () => this.props.close() }
             />
-            <Text
-              style={ {
-                textAlign: 'center',
-                color:'black',
-                fontSize,
-              } }
-            >
-              or
-            </Text>
           </View>
         :
           null
         }
-        <Button
-          title='Donate' 
-          onPress={ this.donate.bind(this) }
-          // buttonStyle={ {
-          //   marginTop: 10,
-          //   marginBottom: 10,
-          //   borderRadius: 20,
-          // } }
-        />
+        { inAppPurchase && donate ?
+          <Text
+            style={ {
+              textAlign: 'center',
+              color:'black',
+              fontSize,
+            } }
+          >
+            or
+          </Text>
+        :
+          null
+        }
+        { donate ?
+          <Button
+            title='Donate' 
+            onPress={ this.donate.bind(this) }
+            // buttonStyle={ {
+            //   marginTop: 10,
+            //   marginBottom: 10,
+            //   borderRadius: 20,
+            // } }
+          />
+        :
+          null
+        }
       </ScrollView>
     )
   }
