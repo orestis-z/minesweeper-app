@@ -1,4 +1,4 @@
-package com.minesweeperoriginal;
+package com.kima.minesweeper;
 
 import android.app.Application;
 

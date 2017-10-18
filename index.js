@@ -11,7 +11,7 @@ if (__DEV__)
   Promise = require("bluebird"); // better warnings for promises
 
 @codePush
-export default class MinesweeperOriginal extends Component {
+export default class Minesweeper extends Component {
   render() {
     return (
       <MenuContext>
@@ -21,4 +21,4 @@ export default class MinesweeperOriginal extends Component {
   }
 };
 
-AppRegistry.registerComponent('MinesweeperOriginal', () => MinesweeperOriginal);
+AppRegistry.registerComponent('Minesweeper', () => Minesweeper);
