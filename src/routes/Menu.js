@@ -212,7 +212,7 @@ class More extends Component {
             <Text
               style={ { color: 'black', fontSize } }
             >
-              { ' Pay what you want' }
+              { ' Support me' }
             </Text>
           </MenuOption>
         </MenuOptions>

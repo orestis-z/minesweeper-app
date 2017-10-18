@@ -20,9 +20,9 @@ const fontSize = normalize(14);
 const inAppPurchase = true;
 const donate = false;
 
-const purchase = () =>
+const purchase = i =>
   InAppBilling.open()
-    .then(() => InAppBilling.purchase('minesweeper_5.00'))
+    .then(() => InAppBilling.purchase('com.kima.minesweeper.support_0' + i))
     .then(details => {
       console.log("You purchased: ", details)
       return InAppBilling.close()
@@ -104,26 +104,14 @@ export default class Purchase extends Component {
         </View>
         { inAppPurchase ?
           <View>
-            <Button
-              title='USD 1.00'
-              onPress={ () => purchase(1) }
-            />
-            <Button
-              title='USD 2.00'
-              onPress={ () => purchase(2) }
-            />
-            <Button
-              title='USD 3.00'
-              onPress={ () => purchase(3) }
-            />
-            <Button
-              title='USD 4.00'
-              onPress={ () => purchase(4) }
-            />
-            <Button
-              title='USD 5.00'
-              onPress={ () => purchase(5) }
-            />
+           { [1, 2, 3, 4, 5].map(i =>
+                <Button
+                  key={ i }
+                  title={ 'USD ' + i + '.00' }
+                  onPress={ () => purchase(i) }
+                />
+              )
+            }
             <Button
               title='USD 0.00'
               onPress={ () => this.props.close() }
