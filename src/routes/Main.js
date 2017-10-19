@@ -17,6 +17,9 @@ import { connect } from 'react-redux';
 // lib
 import { minesLogic, normalize } from 'src/lib';
 
+// config
+import { params } from 'src/config';
+
 import colors from 'src/colors';
 
 const separatorBorderWidth = 4;
@@ -59,8 +62,8 @@ class Separator extends Component {
 }
 
 const minMenuHeight = normalize(20);
-const levelFactor = [0.12, 0.16, 0.21];
-const purchaseInterval = 10;
+const levelFactor = params.levelFactor;;
+const purchaseInterval = params.purchaseInterval;;
 
 @connect(store => ({
   windowSize: store.general.windowSize,
@@ -83,7 +86,7 @@ export default class Main extends Component {
   
   state = {
     counter: 0,
-    requestPurchase: false,
+    requestedPurchase: false,
   };
 
   getNFields(fieldSize) {
@@ -214,7 +217,7 @@ export default class Main extends Component {
       <View>
         <Menu
           height={ this.props.dims.delta + minMenuHeight }
-          purchase={ () => this.setState({requestPurchase: true}) }
+          purchase={ () => this.setState({requestedPurchase: true}) }
         />
         <Separator/>
         <Header
@@ -227,8 +230,11 @@ export default class Main extends Component {
         />
         <Modal
           isVisible={ 
-            this.state.requestPurchase ||
-            (!this.props.purchased && (this.props.gameCounter + this.state.counter) % purchaseInterval === 0)
+            this.state.requestedPurchase ||
+            (
+              !this.props.purchased &&
+              this.props.gameCounter < params.adFactor * params.purchaseInterval && 
+              (this.props.gameCounter + this.state.counter) % purchaseInterval === 0)
           }
         >
           <View
@@ -239,8 +245,8 @@ export default class Main extends Component {
           >
             <Purchase
               close={ () => this.setState({
-                counter: this.state.counter + 1,
-                requestPurchase: false,
+                counter: this.state.requestedPurchase ? this.state.counter : this.state.counter + 1,
+                requestedPurchase: false,
               }) }
             />
           </View>

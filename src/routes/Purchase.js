@@ -9,6 +9,9 @@ import { Button as _Button } from 'react-native-elements'
 import InAppBilling from 'react-native-billing';
 import Device from 'react-native-device-detection';
 
+// redux
+import { connect } from 'react-redux';
+
 // lib
 import {
   getForm,
@@ -16,21 +19,19 @@ import {
   normalize,
 } from 'src/lib';
 
+// config
+import { store, params } from 'src/config';
+
 const fontSize = normalize(14);
-const inAppPurchase = true;
-const donate = false;
+const inAppPurchases = params.inAppPurchases;
+const donate = params.donate;
 
 const purchase = i =>
   InAppBilling.open()
-    .then(() => InAppBilling.purchase('com.kima.minesweeper.support_0' + i))
-    .then(details => {
-      console.log("You purchased: ", details)
-      return InAppBilling.close()
-    })
-    .catch(err => {
-      console.log(err);
-      return InAppBilling.close()
-    });
+  .then(() => InAppBilling.purchase('com.kima.minesweeper.support_0' + i))
+  .then(details => InAppBilling.close())
+  .then(() => inAppPurchase.isPurchased(purchased => purchased && store.dispatch({type: 'PURCHASED'})))
+  .catch(err => InAppBilling.close());
 
 class Button extends Component {
   render () {
@@ -56,6 +57,16 @@ As a student I do my best to keep this application ad-free and up-to-date.
 Therefore I would like to kindly ask you to support me.
 `
 
+const motivationText2 = `
+Looks like you are enjoying Minesweeper.
+As a student I do my best to keep this application good-looking and up-to-date.
+Therefore I would like to kindly ask you to support me which will also remove the ads.
+`
+
+@connect(store => ({
+  gameCounter: store.general.gameCounter,
+  purchased: store.general.purchased,
+}))
 export default class Purchase extends Component {
   donate() {
     Alert.alert('Thanks for your support!');
@@ -90,7 +101,9 @@ export default class Purchase extends Component {
               fontSize,
             } }
           >
-            { motivationText }
+            { this.props.purchased ||
+              this.props.gameCounter < params.adFactor * params.purchaseInterval ?
+              motivationText : motivationText2 }
           </Text>
           <Text style={ {
               textAlign: 'center',
@@ -102,13 +115,13 @@ export default class Purchase extends Component {
             You can pay what you want:
           </Text>
         </View>
-        { inAppPurchase ?
+        { inAppPurchases ?
           <View>
            { [1, 2, 3, 4, 5].map(i =>
                 <Button
                   key={ i }
                   title={ 'USD ' + i + '.00' }
-                  onPress={ () => purchase(i) }
+                  onPress={ () => { this.props.close(); purchase(i);} }
                 />
               )
             }
@@ -120,7 +133,7 @@ export default class Purchase extends Component {
         :
           null
         }
-        { inAppPurchase && donate ?
+        { inAppPurchases && donate ?
           <Text
             style={ {
               textAlign: 'center',

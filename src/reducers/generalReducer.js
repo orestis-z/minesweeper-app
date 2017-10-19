@@ -61,6 +61,11 @@ export default function reducer(state=
         },
         orientation: action.payload.orientation,
       };
+    case 'PURCHASED':
+      return {
+        ...state,
+        purchased: true,
+      }
     default:
       return state;
   };

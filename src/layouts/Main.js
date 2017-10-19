@@ -20,6 +20,12 @@ import {
 // redux
 import { connect } from 'react-redux';
 
+// lib
+import {
+  errorHandle,
+  inAppPurchase,
+} from 'src/lib';
+
 const _orientationDidChange = ({ window: { width, height } }) => {
     const orientation = width > height ? 'LANDSCAPE' : 'PORTRAIT';
 
@@ -38,10 +44,14 @@ if (Device.isTablet)
 else
   Orientation.lockToPortrait();
 
-
 Dimensions.addEventListener('change', _orientationDidChange);
 
 _orientationDidChange({window: Dimensions.get('window')});
+
+if (!store.getState().general.purchased)
+  inAppPurchase.isPurchased()
+  .then(purchased => purchased && store.dispatch({type: 'PURCHASED'}))
+  .catch(errorHandle);
 
 const logoMinTime = __DEV__ ? 0 : 2;
 

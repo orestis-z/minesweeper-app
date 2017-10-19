@@ -1,12 +1,19 @@
 // lib
 import { admob as _admob } from 'src/lib';
 
+// config
+import { params } from 'src/config';
+
 const adFrequency = 3;
 
 const admob = store => next => action => {
-  let result = next(action)
-  // console.log()
-  if (action.type === 'NEW_GAME' && store.getState().general.gameCounter % adFrequency == 0) 
+  const  result = next(action)
+  const { general } = store.getState();
+  if (
+  	action.type === 'NEW_GAME' &&
+  	!general.purchased &&
+  	general.gameCounter > params.adFactor * params.purchaseInterval &&
+  	general.gameCounter % params.adFrequency == 0) 
 	  _admob.showAd();
   return result
 }

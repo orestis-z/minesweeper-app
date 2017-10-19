@@ -1,12 +1,21 @@
 import InAppBilling from 'react-native-billing';
 
-InAppBilling.open()
-.then(() => InAppBilling.purchase('android.test.purchased'))
-.then((details) => {
-  console.log("You purchased: ", details)
-  return InAppBilling.close()
-})
-.catch((err) => {
-  console.log(err);
-});
+let purchaseList = [];
 
+const _isPurchased = (i) => {
+  if (i > 5)
+    return Promise.resolve();
+  else {
+    return _isPurchased(i + 1)
+    .then(() =>
+      InAppBilling.isPurchased('com.kima.minesweeper.support_0' + i)
+      .then(purchased => purchaseList.push(purchased))
+    )
+  }
+}
+
+export const isPurchased = () => 
+  InAppBilling.open()
+  .then(() => _isPurchased(1))
+  .then(() => InAppBilling.close())
+  .then(() => purchaseList.some(x => x))
