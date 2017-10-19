@@ -64,7 +64,7 @@ export default function reducer(state=
     case 'PURCHASED':
       return {
         ...state,
-        purchased: true,
+        purchased: action.payload,
       }
     default:
       return state;

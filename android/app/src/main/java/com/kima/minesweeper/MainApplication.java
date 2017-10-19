@@ -35,11 +35,11 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
-            new RNAdMobPackage(),
-            new VectorIconsPackage(),
-            new OrientationPackage(),
-            new CodePush(null, getApplicationContext(), BuildConfig.DEBUG),
-            new InAppBillingBridgePackage()
+          new RNAdMobPackage(),
+          new VectorIconsPackage(),
+          new OrientationPackage(),
+          new CodePush(getResources().getString(R.string.reactNativeCodePush_androidDeploymentKey), getApplicationContext(), BuildConfig.DEBUG),
+          new InAppBillingBridgePackage()
       );
     }
 

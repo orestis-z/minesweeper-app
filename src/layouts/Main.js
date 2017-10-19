@@ -48,21 +48,30 @@ Dimensions.addEventListener('change', _orientationDidChange);
 
 _orientationDidChange({window: Dimensions.get('window')});
 
-if (!store.getState().general.purchased)
-  inAppPurchase.isPurchased()
-  .then(purchased => purchased && store.dispatch({type: 'PURCHASED'}))
-  .catch(errorHandle);
-
 const logoMinTime = __DEV__ ? 0 : 2;
 
 @connect( store => ({
     loaded: store.general.loaded,
+    purchased: store.general.purchased,
 }))
 export default class Main extends Component {
     state = { timeOver: false }
 
     componentWillMount() {
         setTimeout(() => this.setState({timeOver: true}), logoMinTime * 1000);
+    }
+
+    componentWillUpdate(nextProps, nextState) {
+      if (nextProps.loaded && nextState.timeOver && !nextProps.purchased)
+        inAppPurchase.open()
+        .then(inAppPurchase.isPurchased)
+        .then(purchased => purchased && nextProps.dispatch({type: 'PURCHASED', payload: true}))
+        .then(inAppPurchase.close)
+        .catch(err => {errorHandle(err); inAppPurchase.close()});
+        // .catch(inAppPurchase.close)
+      // else
+      //   inAppPurchase.consumeAll() // testing
+      //   .then(() => store.dispatch({type: 'PURCHASED', payload: false})) // testing
     }
 
     render() {

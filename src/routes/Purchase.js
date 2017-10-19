@@ -6,7 +6,6 @@ import {
   Text,
 } from 'react-native';
 import { Button as _Button } from 'react-native-elements'
-import InAppBilling from 'react-native-billing';
 import Device from 'react-native-device-detection';
 
 // redux
@@ -17,6 +16,7 @@ import {
   getForm,
   errorHandle,
   normalize,
+  inAppPurchase,
 } from 'src/lib';
 
 // config
@@ -27,11 +27,12 @@ const inAppPurchases = params.inAppPurchases;
 const donate = params.donate;
 
 const purchase = i =>
-  InAppBilling.open()
-  .then(() => InAppBilling.purchase('com.kima.minesweeper.support_0' + i))
-  .then(details => InAppBilling.close())
-  .then(() => inAppPurchase.isPurchased(purchased => purchased && store.dispatch({type: 'PURCHASED'})))
-  .catch(err => InAppBilling.close());
+  inAppPurchase.open()
+  .then(() => inAppPurchase.purchase(i))
+  .then(() => inAppPurchase.isPurchased(purchased => purchased && store.dispatch({type: 'PURCHASED', payload: true})))
+  .then(inAppPurchase.close)
+  .catch(err => {errorHandle(err); inAppPurchase.close()}); // testing
+  // .catch(inAppPurchase.close);
 
 class Button extends Component {
   render () {
