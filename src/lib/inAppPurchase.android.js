@@ -10,19 +10,22 @@ const _isPurchased = i => {
   else {
     return _isPurchased(i + 1)
     .then(() => InAppBilling.isPurchased('com.kima.minesweeper.support_0' + i))
-    .then(purchased => purchaseList.push(purchased) && purchaseList)
+    .then(purchased => purchaseList.push(purchased) && purchaseList);
   }
 }
 
-export const open = () => InAppBilling.open();
-export const close = () => InAppBilling.close();
+export const open = InAppBilling.open;
+export const close = InAppBilling.close;
 
 export const purchase = i => InAppBilling.purchase('com.kima.minesweeper.support_0' + i);
 
 export const isPurchased = () => 
   _isPurchased(1)
-  .then(purchaseList => console.log('=====' + purchaseList) || purchaseList)
-  .then(purchaseList => purchaseList.some(x => x))
+  .then(purchaseList => console.log('=====' + purchaseList) || purchaseList) // testing
+  .then(purchaseList => ({
+    purchased: purchaseList.some(x => x),
+    purchaseList,
+  }));
 
 export const consume = i =>
   InAppBilling.consumePurchase('com.kima.minesweeper.support_0' + i)
@@ -38,4 +41,4 @@ const _consumeAll = i => {
 }
 
 export const consumeAll = i =>
-  _consumeAll(1)
+  _consumeAll(1);

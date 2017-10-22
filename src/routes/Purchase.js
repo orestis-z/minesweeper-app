@@ -29,7 +29,11 @@ const donate = params.donate;
 const purchase = i =>
   inAppPurchase.open()
   .then(() => inAppPurchase.purchase(i))
-  .then(() => inAppPurchase.isPurchased(purchased => purchased && store.dispatch({type: 'PURCHASED', payload: true})))
+  .then(inAppPurchase.isPurchased)
+  .then(({purchased, purchaseList}) => purchased && store.dispatch({
+    type: 'PURCHASED',
+    payload: {purchased, purchaseList},
+  }))
   .then(inAppPurchase.close)
   .catch(err => {errorHandle(err); inAppPurchase.close()}); // testing
   // .catch(inAppPurchase.close);
@@ -67,6 +71,7 @@ Therefore I would like to kindly ask you to support me which will also remove th
 @connect(store => ({
   gameCounter: store.general.gameCounter,
   purchased: store.general.purchased,
+  purchaseList: store.general.purchaseList,
 }))
 export default class Purchase extends Component {
   donate() {
@@ -118,12 +123,16 @@ export default class Purchase extends Component {
         </View>
         { inAppPurchases ?
           <View>
-           { [1, 2, 3, 4, 5].map(i =>
-                <Button
-                  key={ i }
-                  title={ 'USD ' + i + '.00' }
-                  onPress={ () => { this.props.close(); purchase(i);} }
-                />
+           { this.props.purchaseList.map((isPurchased, i) =>
+                ( !isPurchased ?
+                    <Button
+                    key={ i }
+                    title={ 'USD ' + (i + 1) + '.00' }
+                    onPress={ () => { this.props.close(); purchase(i + 1);} }
+                  />
+                :
+                  null
+                )
               )
             }
             <Button

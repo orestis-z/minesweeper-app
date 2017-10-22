@@ -12,7 +12,7 @@ const admob = store => next => action => {
   // if (action.type !== 'REDUX_STORAGE_SAVE' && action.type !== 'TIME_CHANGE') {
 //	  console.log('----' + action.type + '----')
 //	  console.log(general)
-  }
+  // }
   if (
   	action.type === 'NEW_GAME' &&
   	!general.purchased &&

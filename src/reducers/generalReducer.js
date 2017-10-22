@@ -2,12 +2,13 @@ export default function reducer(state=
   {
     orientation: 'PORTRAIT',
     windowSize: {width: 0, height: 0},
+    loaded: false,
     level: 1,
     fieldSize: 2,
     vibrate: true,
     gameCounter: 1,
     purchased: false,
-    loaded: false,
+    purchaseList: [false, false, false, false, false],
   },
   action) {
   switch (action.type) {
@@ -20,6 +21,7 @@ export default function reducer(state=
           vibrate: action.payload.general.vibrate,
           gameCounter: action.payload.general.gameCounter,
           purchased: action.payload.general.purchased,
+          purchaseList: action.payload.general.purchaseList,
           loaded: true,
         };
       else
@@ -64,7 +66,8 @@ export default function reducer(state=
     case 'PURCHASED':
       return {
         ...state,
-        purchased: action.payload,
+        purchased: action.payload.purchased,
+        purchaseList: action.payload.purchaseList,
       }
     default:
       return state;

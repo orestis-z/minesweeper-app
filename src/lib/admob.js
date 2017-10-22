@@ -4,7 +4,7 @@ import { AdMobInterstitial } from 'react-native-admob';
 import * as params from 'src/config/params';
 
 AdMobInterstitial.setAdUnitID(params.adUnitID);
-AdMobInterstitial.setTestDevices([AdMobInterstitial.simulatorId]);
+// AdMobInterstitial.setTestDevices([AdMobInterstitial.simulatorId]); // testing
 
 export function showAd() {
   AdMobInterstitial.requestAd().then(() => AdMobInterstitial.showAd());

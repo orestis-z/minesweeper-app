@@ -65,13 +65,16 @@ export default class Main extends Component {
       if (nextProps.loaded && nextState.timeOver && !nextProps.purchased)
         inAppPurchase.open()
         .then(inAppPurchase.isPurchased)
-        .then(purchased => purchased && nextProps.dispatch({type: 'PURCHASED', payload: true}))
+        .then(({purchased, purchaseList}) => purchased && nextProps.dispatch({
+          type: 'PURCHASED',
+          payload: {purchased, purchaseList},
+        }))
         .then(inAppPurchase.close)
         .catch(err => {errorHandle(err); inAppPurchase.close()});
         // .catch(inAppPurchase.close)
       // else
       //   inAppPurchase.consumeAll() // testing
-      //   .then(() => store.dispatch({type: 'PURCHASED', payload: false})) // testing
+      //   .then(() => store.dispatch({type: 'PURCHASED', payload: {purchased: false, purchaseList: [false, false, false, false, false]}})) // testing
     }
 
     render() {

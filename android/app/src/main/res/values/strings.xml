@@ -1,5 +1,5 @@
 <resources>
-    <string moduleConfig="true" name="reactNativeCodePush_androidDeploymentKey">scRr7sO-ZT9szgg_YE8RDmWlgQCF4728e975-55e6-47a0-aa3b-ce92f7981d88</string>
+    <string moduleConfig="true" name="reactNativeCodePush_androidDeploymentKey">suMe-DJNfSt_1IvyFancYzUYd3hp4728e975-55e6-47a0-aa3b-ce92f7981d88</string>
     <string name="app_name">Minesweeper</string>
     <string name="RNB_GOOGLE_PLAY_LICENSE_KEY">MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA2kwkR/AnyxPqeBuzYzMRuSGtCLgWtGH7ZUR5KtMGCtB6gboaVuUS9msoNvwvYREbO3eB4rI+wZfhIwhAXTQiEvj3V2BYs/Ug4aJuu2mpNhtOpzhwY46KruQBemTaWFaEB6aB9p62NNg7WJJYBcc9YsPCb8PcwBOYvxMS6Sl8AOnaH+pIl/i8sQWJVItGvk2l1FrataPnBRU0PRh0o7N+e1WxcQHKB11gp70iHlIwOErfLWT099Vkuws0xc9Nrs0TziDWnTqIpeZ15pX3aZ2e81AQ7E3Iuzt37I7Ycu9gJ51jOkcYQ8BC/zXVaAFk24YTMZWxe7tgO76xms70pDLk9QIDAQAB</string>
 </resources>
