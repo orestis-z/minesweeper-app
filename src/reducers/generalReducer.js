@@ -13,17 +13,19 @@ export default function reducer(state=
   action) {
   switch (action.type) {
     case 'REDUX_STORAGE_LOAD':
-      if (action.payload.general)
+      if (action.payload.general) {
+        const { general } = action.payload;
         return {
           ...state,
-          level: action.payload.general.level,
-          fieldSize: action.payload.general.fieldSize,
-          vibrate: action.payload.general.vibrate,
-          gameCounter: action.payload.general.gameCounter,
-          purchased: action.payload.general.purchased,
-          purchaseList: action.payload.general.purchaseList,
+          level: general.level,
+          fieldSize: general.fieldSize,
+          vibrate: general.vibrate,
+          gameCounter: general.gameCounter,
+          purchased: general.purchased,
+          purchaseList: general.purchaseList || state.purchaseList,
           loaded: true,
         };
+      }
       else
         return {
           ...state,

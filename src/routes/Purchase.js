@@ -86,7 +86,22 @@ export default class Purchase extends Component {
     this.props.close();
   }
 
+  constructor(props) {
+    super(props);
+  
+    inAppPurchase.open()
+    .then(inAppPurchase.isPurchased)
+    .then(({purchased, purchaseList}) => purchased && store.dispatch({
+      type: 'PURCHASED',
+      payload: {purchased, purchaseList},
+    }))
+    .then(inAppPurchase.close)
+    .catch(err => {errorHandle(err); inAppPurchase.close()}); // testing
+    // .catch(inAppPurchase.close);
+  }
+
   render () {
+    const { purchaseList } = this.props;
     return (
       <ScrollView
         style={ {
@@ -113,7 +128,6 @@ export default class Purchase extends Component {
           </Text>
           <Text style={ {
               textAlign: 'center',
-              // marginTop: 5,
               color:'black',
               fontSize,
             } }
@@ -123,17 +137,18 @@ export default class Purchase extends Component {
         </View>
         { inAppPurchases ?
           <View>
-           { this.props.purchaseList.map((isPurchased, i) =>
-                ( !isPurchased ?
+           { purchaseList.reverse().map((isPurchased, i) => {
+              const j = purchaseList.length - i;
+              return  ( !isPurchased ?
                     <Button
                     key={ i }
-                    title={ 'USD ' + (i + 1) + '.00' }
-                    onPress={ () => { this.props.close(); purchase(i + 1);} }
+                    title={ 'USD ' + j + '.00' }
+                    onPress={ () => { this.props.close(); purchase(j);} }
                   />
                 :
                   null
                 )
-              )
+              })
             }
             <Button
               title='USD 0.00'

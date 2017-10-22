@@ -27,9 +27,9 @@ import {
 } from 'src/lib';
 
 const _orientationDidChange = ({ window: { width, height } }) => {
-    const orientation = width > height ? 'LANDSCAPE' : 'PORTRAIT';
+  const orientation = width > height ? 'LANDSCAPE' : 'PORTRAIT';
 
-    store.dispatch({
+  store.dispatch({
     type: 'ORIENTATION_CHANGE',
     payload: {
       width: Dimensions.get('window').width,
@@ -57,8 +57,20 @@ const logoMinTime = __DEV__ ? 0 : 2;
 export default class Main extends Component {
     state = { timeOver: false }
 
+    // constructor(props) {
+    //   super(props);
+    
+    //   inAppPurchase.open()
+    //   .then(inAppPurchase.consumeAll) // testing
+    //   .then(() => store.dispatch({
+    //     type: 'PURCHASED',
+    //     payload: {purchased: false, purchaseList: [false, false, false, false, false]}
+    //   })) // testing
+    //   .then(inAppPurchase.close);
+    // }
+
     componentWillMount() {
-        setTimeout(() => this.setState({timeOver: true}), logoMinTime * 1000);
+      setTimeout(() => this.setState({timeOver: true}), logoMinTime * 1000);
     }
 
     componentWillUpdate(nextProps, nextState) {
@@ -70,11 +82,8 @@ export default class Main extends Component {
           payload: {purchased, purchaseList},
         }))
         .then(inAppPurchase.close)
-        .catch(err => {errorHandle(err); inAppPurchase.close()});
+        .catch(err => {errorHandle(err); inAppPurchase.close()}); // testing
         // .catch(inAppPurchase.close)
-      // else
-      //   inAppPurchase.consumeAll() // testing
-      //   .then(() => store.dispatch({type: 'PURCHASED', payload: {purchased: false, purchaseList: [false, false, false, false, false]}})) // testing
     }
 
     render() {
