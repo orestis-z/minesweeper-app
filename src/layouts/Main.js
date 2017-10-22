@@ -82,8 +82,8 @@ export default class Main extends Component {
           payload: {purchased, purchaseList},
         }))
         .then(inAppPurchase.close)
-        .catch(err => {errorHandle(err); inAppPurchase.close()}); // testing
-        // .catch(inAppPurchase.close)
+        .catch(inAppPurchase.close)
+        // .catch(err => {errorHandle(err); inAppPurchase.close()}); // testing
     }
 
     render() {

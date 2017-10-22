@@ -35,8 +35,8 @@ const purchase = i =>
     payload: {purchased, purchaseList},
   }))
   .then(inAppPurchase.close)
-  .catch(err => {errorHandle(err); inAppPurchase.close()}); // testing
-  // .catch(inAppPurchase.close);
+  .catch(inAppPurchase.close);
+  // .catch(err => {errorHandle(err); inAppPurchase.close()}); // testing
 
 class Button extends Component {
   render () {
@@ -65,7 +65,7 @@ Therefore I would like to kindly ask you to support me.
 const motivationText2 = `
 Looks like you are enjoying Minesweeper.
 As a student I do my best to keep this application good-looking and up-to-date.
-Therefore I would like to kindly ask you to support me which will also remove the ads.
+Therefore I would like to kindly ask you to support me which will also
 `
 
 @connect(store => ({
@@ -96,8 +96,8 @@ export default class Purchase extends Component {
       payload: {purchased, purchaseList},
     }))
     .then(inAppPurchase.close)
-    .catch(err => {errorHandle(err); inAppPurchase.close()}); // testing
-    // .catch(inAppPurchase.close);
+    .catch(inAppPurchase.close);
+    // .catch(err => {errorHandle(err); inAppPurchase.close()}); // testing
   }
 
   render () {
@@ -116,16 +116,30 @@ export default class Purchase extends Component {
             marginRight: 30,
           } }
         >
-          <Text style={ {
-              color:'black',
-              textAlign: 'center',
-              fontSize,
-            } }
-          >
-            { this.props.purchased ||
+          { this.props.purchased ||
               this.props.gameCounter < params.adFactor * params.purchaseInterval ?
-              motivationText : motivationText2 }
-          </Text>
+            <Text style={ {
+                color:'black',
+                textAlign: 'center',
+                fontSize,
+              } }
+            >
+              { motivationText }
+            </Text>
+          :
+            <Text style={ {
+                color:'black',
+                textAlign: 'center',
+                fontSize,
+              } }
+            >
+              <Text>
+                { motivationText2 }
+              </Text>
+              <Text style={ {fontWeight: 'bold'} }>remove the ads</Text>
+              <Text>.</Text>
+            </Text>
+          }
           <Text style={ {
               textAlign: 'center',
               color:'black',

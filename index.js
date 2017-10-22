@@ -7,7 +7,7 @@ import {
   MenuContext,
 } from 'react-native-popup-menu';
 
-const __DEV__ = true;
+// const __DEV__ = true;
 
 if (__DEV__) {
   Promise = require("bluebird"); // better warnings for promises
