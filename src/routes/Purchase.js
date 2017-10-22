@@ -154,7 +154,7 @@ export default class Purchase extends Component {
            { purchaseList.reverse().map((isPurchased, i) => {
               const j = purchaseList.length - i;
               return  ( !isPurchased ?
-                    <Button
+                  <Button
                     key={ i }
                     title={ 'USD ' + j + '.00' }
                     onPress={ () => { this.props.close(); purchase(j);} }
