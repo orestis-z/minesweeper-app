@@ -28,11 +28,11 @@ const menuOptionsMarginVertical = 10;
 const Label = ({ label }) => (
   <View
     style={{
-      paddingHorizontal: 20,
+      paddingRight: 40,
       flexDirection: "row",
     }}
   >
-    <View style={{ borderBottomWidth: 1.5, paddingLeft: 2 }}>
+    <View style={{ borderBottomWidth: 1.5, paddingLeft: 2, marginLeft: -2 }}>
       <Text style={{ fontSize, fontFamily: "win95", color: "black" }}>
         {label[0]}
       </Text>
@@ -62,6 +62,7 @@ class Game extends Component {
         <MenuTrigger
           style={{
             padding: padding,
+            paddingLeft: 0,
           }}
         >
           <Label label="Game" />
@@ -136,6 +137,7 @@ class Options extends Component {
         <MenuTrigger
           style={{
             padding: this.props.padding,
+            paddingLeft: 0,
           }}
         >
           <Label label="Options" />
@@ -250,6 +252,7 @@ class More extends Component {
         <MenuTrigger
           style={{
             padding: this.props.padding,
+            paddingLeft: 0,
           }}
         >
           <Label label="More" />
@@ -304,7 +307,7 @@ export default class _Menu extends Component {
           height: this.props.height,
           backgroundColor: colors.greyMain,
           paddingRight: 5,
-          paddingLeft: 5,
+          paddingLeft: 20,
         }}
       >
         <Game padding={padding} />

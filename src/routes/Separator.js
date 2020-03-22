@@ -21,7 +21,7 @@ class HorizontalSeparator extends PureComponent {
     } = this.props;
 
     return (
-      <View>
+      <View style={{ backgroundColor: colors.greyMain }}>
         <View
           style={{
             width,

@@ -91,6 +91,7 @@ android-avd-list:
 
 .PHONY: android-build-apk
 android-build-apk:
+	npx jetify
 	cd android ; ./gradlew assembleRelease ; cd -
 	@tput setaf 6;\
 	echo "open android/app/build/outputs/apk/release";\
@@ -98,6 +99,7 @@ android-build-apk:
 
 .PHONY: android-build
 android-build:
+	npx jetify
 	cd android ; ./gradlew bundleRelease ; cd -
 	@tput setaf 6;\
 	echo "open android/app/build/outputs/bundle/release";\

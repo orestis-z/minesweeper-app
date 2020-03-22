@@ -67,7 +67,7 @@ class SmileyBtn extends PureComponent {
 
   render() {
     return (
-      <View style={{ margin: elementMargin }}>
+      <View style={{ margin: elementMargin, marginRight: 0 }}>
         <Button
           onPress={() => this.props.reset()}
           onPressIn={() => this.setState({ pressed: true })}
@@ -100,7 +100,7 @@ class Flag extends PureComponent {
 class FlagBtn extends PureComponent {
   render() {
     return (
-      <View style={{ margin: elementMargin }}>
+      <View style={{ margin: elementMargin, marginLeft: 0 }}>
         <Button
           onPress={() =>
             this.props.dispatch({
@@ -126,7 +126,7 @@ class Timer extends PureComponent {
           backgroundColor: "black",
           width: 80,
           height: 50,
-          margin: elementMargin,
+          marginVertical: elementMargin,
         }}
       >
         <View
@@ -214,7 +214,6 @@ class Header extends Component {
         style={{
           flexDirection: "row",
           alignItems: "center",
-          justifyContent: "space-between",
           backgroundColor: colors.greyMain,
         }}
       >
@@ -235,12 +234,15 @@ class Header extends Component {
             onCancel={() => this.setState({ dialogVisible: false })}
           />
         )}
-        <View />
+        <View style={{ flexShrink: 1, width: 20 }} />
         <Timer count={this.props.mineCount} />
+        <View style={{ flexGrow: 1, minWidth: 10 }} />
         <SmileyBtn reset={this.reset} />
+        <View style={{ flexShrink: 2, width: 20 }} />
         <FlagBtn inputMode={this.props.inputMode} />
+        <View style={{ flexGrow: 1, minWidth: 10 }} />
         <Timer count={this.props.time} />
-        <View />
+        <View style={{ flexShrink: 1, width: 20 }} />
       </View>
     );
   }
