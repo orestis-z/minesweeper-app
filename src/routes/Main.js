@@ -7,6 +7,8 @@ import Board from "./Board";
 import Header, { headerHeight } from "./Header";
 import Menu from "./Menu";
 import Purchase from "./Purchase";
+import { HorizontalSeparator } from "./Separator";
+import Bar from "./Bar";
 
 // redux
 import { connect } from "react-redux";
@@ -17,57 +19,24 @@ import { minesLogic, normalize } from "src/lib";
 // config
 import { params } from "src/config";
 
-import colors from "src/colors";
+const Modal_ = React.memo(
+  ({ visible, children }) => <Modal isVisible={visible}>{children}</Modal>,
+  (prevProps, nextProps) => prevProps.visible === nextProps.visible,
+);
 
-const separatorBorderWidth = 4;
-const separatorInlineWdith = 9;
-const separatorWidth = separatorInlineWdith + 2 * separatorBorderWidth;
-
-@connect(store => ({
-  windowSize: store.general.windowSize,
-}))
-class Separator extends Component {
-  render() {
-    const { width } = this.props.windowSize;
-
-    return (
-      <View>
-        <View
-          style={{
-            width: width,
-            height: separatorBorderWidth,
-            backgroundColor: colors.greyLight,
-          }}
-        />
-        <View
-          style={{
-            width: width,
-            height: separatorInlineWdith,
-            backgroundColor: colors.greyMain,
-          }}
-        />
-        <View
-          style={{
-            width: width,
-            height: separatorBorderWidth,
-            backgroundColor: colors.greyShade,
-          }}
-        />
-      </View>
-    );
-  }
-}
-
-const minMenuHeight = normalize(20);
+const minMenuHeight = normalize(30);
+export const minBarHeight = normalize(30);
 const levelFactor = params.levelFactor;
 const purchaseInterval = params.purchaseInterval;
 
+export default
 @connect(store => ({
   windowSize: store.general.windowSize,
   orientation: store.general.orientation,
   fieldSize: store.general.fieldSize,
   level: store.general.level,
   vibrate: store.general.vibrate,
+  flavour: store.general.flavour,
   gameCounter: store.general.gameCounter,
   purchased: store.general.purchased,
   gameState: store.game.gameState,
@@ -76,7 +45,7 @@ const purchaseInterval = params.purchaseInterval;
   mineField: store.game.mineField,
   dims: store.game.dims,
 }))
-export default class Main extends Component {
+class Main extends Component {
   static navigationOptions = {
     header: null,
   };
@@ -91,23 +60,37 @@ export default class Main extends Component {
     else return 5 + fieldSize * 2;
   }
 
-  getDimensions(props) {
+  getAvailableSize = props => {
+    const { windowSize, flavour } = props;
+    // const nVerSeparators = flavour ? 3 : 2;
+    const nVerSeparators = 2;
+    // const nHorSeparators = flavour ? 2 : 0;
+    let availableHeight =
+      windowSize.height -
+      nVerSeparators * HorizontalSeparator.separatorWidth -
+      headerHeight -
+      minBarHeight;
+    if (flavour) availableHeight -= minMenuHeight;
+    const availableWidth = windowSize.width; //- nHorSeparators * HorizontalSeparator.separatorWidth;
+    return { availableHeight, availableWidth };
+  };
+
+  getDimensions = props => {
     const { windowSize, fieldSize, orientation } = props;
     let buttonSize, nFields1, nFields2;
-    const availableHeight =
-      windowSize.height - 2 * separatorWidth - headerHeight - minMenuHeight;
+    const { availableHeight, availableWidth } = this.getAvailableSize(props);
 
     if (orientation === "PORTRAIT") {
       nFields1 = this.getNFields(fieldSize);
-      buttonSize = windowSize.width / nFields1;
+      buttonSize = availableWidth / nFields1;
       nFields2 = Math.floor(availableHeight / buttonSize);
     } else {
       nFields2 = Math.ceil(
         (availableHeight / windowSize.height) * this.getNFields(fieldSize),
       );
       const buttonSizeTemp = availableHeight / nFields2;
-      nFields1 = Math.ceil(windowSize.width / buttonSizeTemp);
-      buttonSize = windowSize.width / nFields1;
+      nFields1 = Math.ceil(availableWidth / buttonSizeTemp);
+      buttonSize = availableWidth / nFields1;
     }
 
     return {
@@ -115,7 +98,16 @@ export default class Main extends Component {
       dimensions: [nFields2, nFields1],
       delta: availableHeight - nFields2 * buttonSize,
     };
-  }
+  };
+
+  getBoardSize = () => {
+    const { dimensions, buttonSize, delta } = this.getDimensions(this.props);
+    return {
+      boardWidth: dimensions[1] * buttonSize,
+      boardHeight: dimensions[0] * buttonSize,
+      delta,
+    };
+  };
 
   startTimer = () => {
     this.timerId = setInterval(
@@ -202,10 +194,12 @@ export default class Main extends Component {
     this.state.mines = this.initMines(props);
   }
 
-  componentWillUpdate(nextProps) {
+  UNSAFE_componentWillUpdate(nextProps) {
     if (
       nextProps.fieldSize !== this.props.fieldSize ||
       nextProps.level !== this.props.level ||
+      (nextProps.flavour !== this.props.flavour &&
+        (nextProps.flavour == 0 || this.props.flavour == 0)) ||
       nextProps.windowSize.width !== this.props.windowSize.width ||
       nextProps.windowSize.height !== this.props.windowSize.height
     ) {
@@ -213,46 +207,50 @@ export default class Main extends Component {
     }
   }
 
+  _close = () =>
+    this.setState({
+      counter: this.state.requestedPurchase
+        ? this.state.counter
+        : this.state.counter + 1,
+      requestedPurchase: false,
+    });
+
   render() {
+    const { dims, flavour } = this.props;
+    const modalVisible =
+      this.state.requestedPurchase ||
+      (!this.props.purchased &&
+        this.props.gameCounter < params.adFactor * params.purchaseInterval &&
+        (this.props.gameCounter + this.state.counter) % purchaseInterval === 0);
+    const { boardWidth, boardHeight } = this.getBoardSize();
     return (
       <View>
+        {flavour ? (
+          <Bar height={minBarHeight + dims.delta * 0.3} flavour={flavour} />
+        ) : null}
         <Menu
-          height={this.props.dims.delta + minMenuHeight}
+          height={dims.delta * (flavour ? 0.7 : 1) + minMenuHeight}
           purchase={() => this.setState({ requestedPurchase: true })}
         />
-        <Separator />
+        <HorizontalSeparator />
         <Header mines={this.state.mines} clearTimer={this.clearTimer} />
-        <Separator />
-        <Board mines={this.state.mines} />
-        <Modal
-          isVisible={
-            this.state.requestedPurchase ||
-            (!this.props.purchased &&
-              this.props.gameCounter <
-                params.adFactor * params.purchaseInterval &&
-              (this.props.gameCounter + this.state.counter) %
-                purchaseInterval ===
-                0)
-          }
-        >
+        <HorizontalSeparator />
+        <Board
+          mines={this.state.mines}
+          size={{ width: boardWidth, height: boardHeight }}
+          flavour={flavour}
+        />
+        {/*flavour ? <HorizontalSeparator /> : null*/}
+        <Modal_ visible={modalVisible}>
           <View
             style={{
               flex: 1,
               backgroundColor: "white",
             }}
           >
-            <Purchase
-              close={() =>
-                this.setState({
-                  counter: this.state.requestedPurchase
-                    ? this.state.counter
-                    : this.state.counter + 1,
-                  requestedPurchase: false,
-                })
-              }
-            />
+            <Purchase close={this._close} />
           </View>
-        </Modal>
+        </Modal_>
       </View>
     );
   }

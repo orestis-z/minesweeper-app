@@ -1,10 +1,10 @@
-import {each} from 'lodash';
+import { each } from "lodash";
 
-export default (cells) => {
+export default cells => {
   const lines = [""];
-  each(cells, (row, row_index) => {
+  each(cells, row => {
     const cell_values = [];
-    each(row, (cell_value, column_index) => {
+    each(row, cell_value => {
       cell_values.push(cell_value);
     });
     lines.push(cell_values.join(" "));

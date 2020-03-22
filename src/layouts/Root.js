@@ -1,38 +1,29 @@
-import React from 'react';
-import { Provider } from 'react-redux';
-import {
-  View,
-  StatusBar,
-} from 'react-native';
+import React from "react";
+import { Provider } from "react-redux";
+import { View, StatusBar } from "react-native";
 
-import Main from './Main';
+import Main from "./Main";
 
 // config
-import {
-  store,
-} from 'src/config';
+import { store } from "src/config";
 
 // components
-import { Component } from 'src/components';
+import { Component } from "src/components";
 
 export default class Root extends Component {
   render() {
     return (
-      <Provider
-        store={ store }
-      >
+      <Provider store={store}>
         <View
-          style={ {
+          style={{
             flex: 1,
-            backgroundColor: 'transparent'
-          } }
+            backgroundColor: "transparent",
+          }}
         >
-          <StatusBar
-            hidden={ true }
-          />
-          <Main/>
+          <StatusBar hidden={true} />
+          <Main />
         </View>
       </Provider>
     );
   }
-};
+}

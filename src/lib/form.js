@@ -1,5 +1,4 @@
-import { Linking } from 'react-native';
-
+import { Linking } from "react-native";
 
 export function postForm(path, form) {
   const str = [];
@@ -8,14 +7,14 @@ export function postForm(path, form) {
   }
   const body = str.join("&");
   const req = {
-    method: 'post',
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded'
-    },
+    method: "post",
+    // headers: {
+    //   "Content-Type": "application/x-www-form-urlencoded",
+    // },
     body,
-    mode: 'cors',
+    mode: "cors",
     headers: {
-      'Access-Control-Allow-Origin': '*',
+      "Access-Control-Allow-Origin": "*",
     },
   };
   return fetch(path, req);
@@ -27,7 +26,7 @@ export function getForm(path, form) {
     str.push(encodeURIComponent(p) + "=" + encodeURIComponent(form[p]));
   }
   const body = str.join("&");
-  const url = path + '?' + body;
+  const url = path + "?" + body;
 
-  return Linking.openURL(url);;
+  return Linking.openURL(url);
 }

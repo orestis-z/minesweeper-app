@@ -1,0 +1,15 @@
+export default {
+  greyMain: "#c0c0c0",
+  greyShade: "#808080",
+  greyLight: "#ffffff",
+  yellowSmiley: "#ffff00",
+  numbersRed: "#ff0000",
+  blue: "#0000ff",
+  green: "#008100",
+  red: "#ff1300",
+  blueDark: "#000083",
+  redDark: "#7a0002",
+  red2: "#fe0300",
+  blueSea: "008080",
+  wind95Bg: "rgb(0,8,123)",
+};

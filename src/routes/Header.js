@@ -1,17 +1,8 @@
-import React, { Component } from 'react';
-import {
-  Image,
-  StyleSheet,
-  Platform,
-  Text,
-  View,
-} from 'react-native';
-import { MaterialDialog } from 'react-native-material-dialog';
+import React, { Component, PureComponent } from "react";
+import { Image, StyleSheet, Platform, Text, View } from "react-native";
 
 // components
-import {
-  Touchable,
-} from 'src/components';
+import { Touchable, MaterialDialog } from "src/components";
 
 // images
 import {
@@ -21,29 +12,25 @@ import {
   neutralImage,
   sadImage,
   sunglassesImage,
-} from 'src/assets/images';
+} from "src/assets/images";
 
 // redux
-import { connect } from 'react-redux';
+import { connect } from "react-redux";
 
-import colors from 'src/colors';
+import colors from "src/colors";
 
 class Button extends Component {
   render() {
     return (
       <Touchable
-        onPress={ this.props.onPress }      
-        onPressIn={ this.props.onPressIn }
-        onPressOut={ this.props.onPressOut }
+        onPress={this.props.onPress}
+        onPressIn={this.props.onPressIn}
+        onPressOut={this.props.onPressOut}
       >
         <View>
-          <View
-            style={ styles.triangleCorner }
-          />
-          <View
-            style={ styles.square }
-          />
-          { this.props.children }
+          <View style={styles.triangleCorner} />
+          <View style={styles.square} />
+          {this.props.children}
         </View>
       </Touchable>
     );
@@ -53,209 +40,207 @@ class Button extends Component {
 @connect(store => ({
   gameState: store.game.gameState,
 }))
-class Smiley extends Component {
+class Smiley extends PureComponent {
   render() {
     return (
-      <View
-        style={ styles.smileyContainer }
-      >
+      <View style={styles.smileyContainer}>
         <Image
-          source={ this.props.gameState == 'WON' ? sunglassesImage : this.props.gameState == 'LOST' ? sadImage : this.props.pressed ? neutralImage : smileImage }
-          style={ styles.smiley }
-          resizeMode='contain'
+          source={
+            this.props.gameState == "WON"
+              ? sunglassesImage
+              : this.props.gameState == "LOST"
+              ? sadImage
+              : this.props.pressed
+              ? neutralImage
+              : smileImage
+          }
+          style={styles.smiley}
+          resizeMode="contain"
         />
       </View>
-    )
+    );
   }
 }
 
-class SmileyBtn extends Component {
-  state = { pressed: false }
+class SmileyBtn extends PureComponent {
+  state = { pressed: false };
 
   render() {
     return (
-      <View
-        style={ {margin: elementMargin} }
-      >
+      <View style={{ margin: elementMargin }}>
         <Button
-          onPress={ () => this.props.reset() }      
-          onPressIn={ () => this.setState({pressed: true}) }
-          onPressOut={ () => this.setState({pressed: false}) }
+          onPress={() => this.props.reset()}
+          onPressIn={() => this.setState({ pressed: true })}
+          onPressOut={() => this.setState({ pressed: false })}
         >
-          <Smiley
-            pressed={ this.state.pressed }
-          />
+          <Smiley pressed={this.state.pressed} />
         </Button>
       </View>
-    )
+    );
   }
 }
 
-class Flag extends Component {
+class Flag extends PureComponent {
   render() {
     return (
-      <View
-        style={ styles.flagContainer }
-      >
+      <View style={styles.flagContainer}>
         <Image
-          source={ this.props.inputMode ? flagImage : mineImage }
-          style={ styles.smiley }
-          resizeMode='contain'
+          source={this.props.inputMode ? flagImage : mineImage}
+          style={styles.smiley}
+          resizeMode="contain"
         />
       </View>
-    )
+    );
   }
 }
 
 @connect(store => ({
   inputMode: store.game.inputMode,
 }))
-class FlagBtn extends Component {
+class FlagBtn extends PureComponent {
   render() {
     return (
-      <View
-      style={ {margin: elementMargin} }
-      >
+      <View style={{ margin: elementMargin }}>
         <Button
-          onPress={ () => this.props.dispatch({
-            type: 'INPUT_MODE_CHANGE',
-            payload: !this.props.inputMode,
-          }) }   
+          onPress={() =>
+            this.props.dispatch({
+              type: "INPUT_MODE_CHANGE",
+              payload: !this.props.inputMode,
+            })
+          }
         >
-          <Flag
-            inputMode={ this.props.inputMode }
-          />
+          <Flag inputMode={this.props.inputMode} />
         </Button>
       </View>
-    )
+    );
   }
 }
 
-class Timer extends Component {
+class Timer extends PureComponent {
   render() {
     const { count } = this.props;
 
     return (
       <View
-        style={ {
-          backgroundColor: 'black',
+        style={{
+          backgroundColor: "black",
           width: 80,
           height: 50,
           margin: elementMargin,
-        } }
+        }}
       >
         <View
-          style={ {
+          style={{
             left: 6,
-            top: (Platform.OS === 'ios') ? 5 : 2,
-          } }
+            top: Platform.OS === "ios" ? 5 : 2,
+          }}
         >
           <View
-            style={ {
-              position: 'absolute',
+            style={{
+              position: "absolute",
               width: 80,
               height: 50,
-              backgroundColor: 'transparent',
-            } }
+              backgroundColor: "transparent",
+            }}
           >
             <Text
-              style={ {
-                fontFamily: 'digital',
-                fontSize: 50, 
+              style={{
+                fontFamily: "digital",
+                fontSize: 50,
                 color: colors.red,
                 opacity: 0.4,
-              } }
+              }}
             >
-              { '000' }
+              {"000"}
             </Text>
           </View>
           <View
-            style={ {
-              position: 'absolute',
+            style={{
+              position: "absolute",
               width: 80,
               height: 50,
-              backgroundColor: 'transparent',
-            } }
+              backgroundColor: "transparent",
+            }}
           >
             <Text
-              style={ {
-                fontFamily: 'digital',
+              style={{
+                fontFamily: "digital",
                 fontSize: 50,
                 color: colors.red,
-              } }
+              }}
             >
-              { count < 10 ? '00' + count :
-                count < 100 ? '0' + count :
-                count < 1000 ? '' + count :
-                '' + 999
-              }
+              {count < 10
+                ? "00" + count
+                : count < 100
+                ? "0" + count
+                : count < 1000
+                ? "" + count
+                : "" + 999}
             </Text>
           </View>
         </View>
       </View>
-    )
+    );
   }
 }
 
+export default
 @connect(store => ({
   gameState: store.game.gameState,
   time: store.game.time,
   mineCount: store.game.mineCount,
   inputMode: store.game.inputMode,
 }))
-export default class Header extends Component {
-  state={ dialogVisible: false }
-  
+class Header extends Component {
+  state = { dialogVisible: false };
+
   _reset() {
     this.props.mines.reset();
     this.props.clearTimer();
     this.props.dispatch({
-      type: 'NEW_GAME',
-    })
+      type: "NEW_GAME",
+    });
   }
 
-  reset() {
-    if (this.props.gameState === 'STARTED' ) {
-      this.setState({dialogVisible: true})
-    }
-    else
-      this._reset();
-    
-  }
+  reset = () => {
+    if (this.props.gameState === "STARTED") {
+      this.setState({ dialogVisible: true });
+    } else this._reset();
+  };
 
   render() {
     return (
       <View
-        style={ {
-          flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'space-between',
+        style={{
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "space-between",
           backgroundColor: colors.greyMain,
-        } }
+        }}
       >
-        <MaterialDialog
-          title={'Restart Game?'}
-          visible={this.state.dialogVisible}
-          onOk={() => {
-            this.setState({dialogVisible: false})
-            this._reset();
-          }}
-          onCancel={() =>  this.setState({dialogVisible: false}) }
-        />
-        <View/>
-        <Timer
-          count={ this.props.mineCount }
-        />
-        <SmileyBtn
-          reset={ this.reset.bind(this) }
-        />
-        <FlagBtn
-          inputMode={ this.props.inputMode }
-        />
-        <Timer
-          count={ this.props.time }
-        />
-        <View/>
+        {Platform.OS == "web" || (
+          <MaterialDialog
+            title={"Restart Game?"}
+            style={{
+              title: {
+                fontFamily: "win95",
+              },
+              actionButton: { fontFamily: "win95" },
+            }}
+            visible={this.state.dialogVisible}
+            onOk={() => {
+              this.setState({ dialogVisible: false });
+              this._reset();
+            }}
+            onCancel={() => this.setState({ dialogVisible: false })}
+          />
+        )}
+        <View />
+        <Timer count={this.props.mineCount} />
+        <SmileyBtn reset={this.reset} />
+        <FlagBtn inputMode={this.props.inputMode} />
+        <Timer count={this.props.time} />
+        <View />
       </View>
     );
   }
@@ -280,41 +265,41 @@ const styles = StyleSheet.create({
     // borderColor: 'red'
   },
   smileyContainer: {
-    position: 'absolute',
+    position: "absolute",
     left: smileyMargin,
     top: smileyMargin,
     height: smileyDiam,
     width: smileyDiam,
-    alignItems: 'center',
+    alignItems: "center",
     backgroundColor: colors.yellowSmiley,
-    borderRadius: smileyDiam  / 2,
+    borderRadius: smileyDiam / 2,
   },
   flagContainer: {
-    position: 'absolute',
+    position: "absolute",
     left: smileyMargin,
     top: smileyMargin,
     height: smileyDiam,
     width: smileyDiam,
-    alignItems: 'center',
+    alignItems: "center",
   },
   triangleCorner: {
     width: 0,
     height: 0,
     backgroundColor: colors.greyShade,
-    borderStyle: 'solid',
+    borderStyle: "solid",
     borderRightWidth: buttonHeight,
     borderTopWidth: buttonHeight,
-    borderRightColor: 'transparent',
+    borderRightColor: "transparent",
     borderTopColor: colors.greyLight,
   },
   square: {
-    position: 'absolute',
+    position: "absolute",
     left: smileyBorder,
     top: smileyBorder,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     backgroundColor: colors.greyMain,
     height: smileySquareSize,
     width: smileySquareSize,
   },
-})
+});

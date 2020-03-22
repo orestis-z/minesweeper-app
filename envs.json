@@ -1,0 +1,14 @@
+{
+	"local-mobile": {
+		"DEV": true
+	},
+	"local": {
+		"DEV": true
+	},
+	"stage": {
+		"DEV": false
+	},
+	"prod": {
+		"DEV": false
+	}
+}

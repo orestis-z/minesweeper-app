@@ -1,7 +1,7 @@
-import cellStates from '../../cellStates';
-import cellNeighbours from './cellNeighbours';
-import renderAsString from './renderAsString';
-import {times, isNil, isEqual, filter, some, map, range, each} from 'lodash';
+import cellStates from "../../cellStates";
+import cellNeighbours from "./cellNeighbours";
+import renderAsString from "./renderAsString";
+import { times, isNil, isEqual, filter, some, map, range, each } from "lodash";
 
 export default (dimensions, mineCount) => {
   const [row_count, column_count] = dimensions;
@@ -10,10 +10,10 @@ export default (dimensions, mineCount) => {
   const totalMines = mineCount;
   const total_cells = row_count * column_count;
 
-  times(row_count, (row_index) => {
+  times(row_count, () => {
     const row = [];
     state.push(row);
-    times(column_count, (column_index) => {
+    times(column_count, () => {
       row.push(cellStates.UNKNOWN);
     });
   });
@@ -23,29 +23,40 @@ export default (dimensions, mineCount) => {
   };
 
   const markedOrQuestioned = ([row, column]) => {
-    return state[row][column] === cellStates.MARKED || state[row][column] === cellStates.QUESTION;
+    return (
+      state[row][column] === cellStates.MARKED ||
+      state[row][column] === cellStates.QUESTION
+    );
   };
 
   const outOfBounds = ([row, column]) => {
-    return (row < 0 || row > (row_count - 1) || column < 0 || column > (column_count - 1));
+    return (
+      row < 0 || row > row_count - 1 || column < 0 || column > column_count - 1
+    );
   };
 
-  const isMine = (cell) => some(mines, (mine) => isEqual(cell, mine));
+  const isMine = cell => some(mines, mine => isEqual(cell, mine));
 
-  const neighbouringMines = (neighbours) => filter(neighbours, (neighbour) => isMine(neighbour));
+  const neighbouringMines = neighbours =>
+    filter(neighbours, neighbour => isMine(neighbour));
 
-  const neighbouringMarkedCells = (neighbours) => filter(neighbours, (neighbour) => marked(neighbour));
+  const neighbouringMarkedCells = neighbours =>
+    filter(neighbours, neighbour => marked(neighbour));
 
   const cellState = ([row, column]) => state[row][column];
 
-  const revealed = ([row, column]) => some(range(9), (number) => state[row][column] === cellStates[number]);
+  const revealed = ([row, column]) =>
+    some(range(9), number => state[row][column] === cellStates[number]);
 
-  const notifyListeners = (listeners, cell, state, previous_state) => map(listeners, (cb) => { cb(cell, state, previous_state); });
+  const notifyListeners = (listeners, cell, state, previous_state) =>
+    map(listeners, cb => {
+      cb(cell, state, previous_state);
+    });
 
-  const reset = (listeners) => {
+  const reset = listeners => {
     mines = null;
-    times(row_count, (row) => {
-      times(column_count, (col) => {
+    times(row_count, row => {
+      times(column_count, col => {
         const previousState = state[row][col];
         state[row][col] = cellStates.UNKNOWN;
         notifyListeners(listeners, [row, col], state[row][col], previousState);
@@ -59,9 +70,9 @@ export default (dimensions, mineCount) => {
     notifyListeners(listeners, [row, column], new_state, previous_state);
   };
 
-  const flagIncorrectlyMarkedMines = (listeners) => {
-    times(row_count, (row) => {
-      times(column_count, (column) => {
+  const flagIncorrectlyMarkedMines = listeners => {
+    times(row_count, row => {
+      times(column_count, column => {
         const cell = [row, column];
         if (cellState(cell) === cellStates.MARKED && !isMine(cell)) {
           setCellState(cell, cellStates.INCORRECTLY_MARKED_MINE, listeners);
@@ -70,9 +81,10 @@ export default (dimensions, mineCount) => {
     });
   };
 
-  const revealUnmarkedMines = (listeners) => {
-    map(mines, (mine) => {
-      if (cellState(mine) === cellStates.UNKNOWN) setCellState(mine, cellStates.MINE, listeners);
+  const revealUnmarkedMines = listeners => {
+    map(mines, mine => {
+      if (cellState(mine) === cellStates.UNKNOWN)
+        setCellState(mine, cellStates.MINE, listeners);
     });
   };
 
@@ -93,21 +105,31 @@ export default (dimensions, mineCount) => {
     const mine_count = neighbouringMines(neighbours).length;
     const new_state = cellStates[mine_count];
     setCellState(cell, new_state, listeners);
-    if (mine_count === 0) map(neighbours, (neighbour) => { reveal(neighbour, listeners); });
+    if (mine_count === 0)
+      map(neighbours, neighbour => {
+        reveal(neighbour, listeners);
+      });
     return false;
   };
 
   const chord = (cell, listeners) => {
     if (outOfBounds(cell)) return false;
-    if (!revealed(cell) && !(markedOrQuestioned(cell))) return reveal(cell, listeners);
+    if (!revealed(cell) && !markedOrQuestioned(cell))
+      return reveal(cell, listeners);
     if (markedOrQuestioned(cell)) return false;
 
     const neighbours = cellNeighbours(dimensions, cell);
     let revealedMine = false;
 
-    if (revealed(cell) && neighbouringMarkedCells(neighbours).length === neighbouringMines(neighbours).length) {
-      each(neighbours, (neighbour) => {
-        if (reveal(neighbour, listeners) === true) { revealedMine = true; }
+    if (
+      revealed(cell) &&
+      neighbouringMarkedCells(neighbours).length ===
+        neighbouringMines(neighbours).length
+    ) {
+      each(neighbours, neighbour => {
+        if (reveal(neighbour, listeners) === true) {
+          revealedMine = true;
+        }
       });
     }
     return revealedMine;
@@ -115,8 +137,8 @@ export default (dimensions, mineCount) => {
 
   const revealedCells = () => {
     let count = 0;
-    times(row_count, (row) => {
-      times(column_count, (column) => {
+    times(row_count, row => {
+      times(column_count, column => {
         if (revealed([row, column])) count += 1;
       });
     });
@@ -125,8 +147,8 @@ export default (dimensions, mineCount) => {
 
   const markedCellCount = () => {
     let count = 0;
-    times(row_count, (row) => {
-      times(column_count, (column) => {
+    times(row_count, row => {
+      times(column_count, column => {
         if (marked([row, column])) count += 1;
       });
     });
@@ -137,7 +159,7 @@ export default (dimensions, mineCount) => {
     return totalMines - markedCellCount();
   };
 
-  const getNewMarkedState = (oldState) => {
+  const getNewMarkedState = oldState => {
     if (oldState === cellStates.UNKNOWN) return cellStates.MARKED;
     if (oldState === cellStates.MARKED) return cellStates.QUESTION;
     if (oldState === cellStates.QUESTION) return cellStates.UNKNOWN;
@@ -146,23 +168,37 @@ export default (dimensions, mineCount) => {
 
   const mark = (cell, listeners) => {
     const previous_state = cellState(cell);
-    if (revealed(cell) || (previous_state === cellStates.UNKNOWN && remainingMineCount() === 0)) return previous_state;
+    if (
+      revealed(cell) ||
+      (previous_state === cellStates.UNKNOWN && remainingMineCount() === 0)
+    )
+      return previous_state;
     const new_state = getNewMarkedState(previous_state);
     setCellState(cell, new_state, listeners);
     return new_state;
   };
 
-  const placeMines = (m) => {
+  const placeMines = m => {
     if (m.length !== totalMines) {
-      throw Error('The number of mines being placed does not match config');
+      throw Error("The number of mines being placed does not match config");
     }
     mines = m;
   };
 
-  const allCellsWithoutMinesRevealed = () => revealedCells() === (total_cells - totalMines);
+  const allCellsWithoutMinesRevealed = () =>
+    revealedCells() === total_cells - totalMines;
 
-  return { placeMines, remainingMineCount, cellState, reveal, mark, chord, revealed, allCellsWithoutMinesRevealed, reset,
+  return {
+    placeMines,
+    remainingMineCount,
+    cellState,
+    reveal,
+    mark,
+    chord,
+    revealed,
+    allCellsWithoutMinesRevealed,
+    reset,
     minesPlaced: () => !isNil(mines),
-    renderAsString: () => renderAsString(state)
+    renderAsString: () => renderAsString(state),
   };
 };

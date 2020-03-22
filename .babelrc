@@ -1,7 +1,14 @@
 {
-"presets": ["react-native"],
-"plugins":
-  [
-    "transform-decorators-legacy"
-  ]
+  "presets": [
+    "module:metro-react-native-babel-preset",
+    "@babel/preset-flow"
+  ],
+  "env": {
+    "production": {
+      "plugins": ["transform-remove-console"]
+    }
+  },
+  "plugins": [
+    "@babel/plugin-proposal-export-namespace-from",
+  ],
 }

@@ -1,18 +1,22 @@
-export default function reducer(state=
-  {
-    orientation: 'PORTRAIT',
-    windowSize: {width: 0, height: 0},
-    loaded: false,
+import { Platform } from "react-native";
+
+export default function reducer(
+  state = {
+    orientation: "PORTRAIT",
+    windowSize: { width: 0, height: 0 },
+    loaded: Platform.OS == "web",
     level: 1,
     fieldSize: 2,
     vibrate: true,
+    flavour: 1,
     gameCounter: 1,
     purchased: false,
     purchaseList: [false, false, false, false, false],
   },
-  action) {
+  action,
+) {
   switch (action.type) {
-    case 'REDUX_STORAGE_LOAD':
+    case "REDUX_STORAGE_LOAD":
       if (action.payload.general) {
         const { general } = action.payload;
         return {
@@ -20,58 +24,63 @@ export default function reducer(state=
           level: general.level,
           fieldSize: general.fieldSize,
           vibrate: general.vibrate,
+          flavour: general.flavour,
           gameCounter: general.gameCounter,
           purchased: general.purchased,
           purchaseList: general.purchaseList || state.purchaseList,
           loaded: true,
         };
-      }
-      else
+      } else
         return {
           ...state,
-          loaded: true
+          loaded: true,
         };
-    case 'ERROR_LOADING_STORE':
+    case "ERROR_LOADING_STORE":
       return {
         ...state,
-        loaded: true
+        loaded: true,
       };
-    case 'VIBRATE':
+    case "VIBRATE":
       return {
         ...state,
         vibrate: action.payload,
       };
-    case 'FIELD_SIZE':
+    case "FIELD_SIZE":
       return {
         ...state,
         fieldSize: action.payload,
       };
-    case 'LEVEL':
+    case "LEVEL":
       return {
         ...state,
         level: action.payload,
       };
-    case 'NEW_GAME':
+    case "NEW_GAME":
       return {
         ...state,
         gameCounter: state.gameCounter + 1,
       };
-    case 'ORIENTATION_CHANGE':
+    case "FLAVOUR":
+      return {
+        ...state,
+        flavour: action.payload,
+      };
+    case "ORIENTATION_CHANGE":
       return {
         ...state,
         windowSize: {
           width: action.payload.width,
-          height:action.payload.height,
+          height: action.payload.height,
         },
         orientation: action.payload.orientation,
       };
-    case 'PURCHASED':
+    case "PURCHASED":
       return {
         ...state,
         purchased: action.payload.purchased,
         purchaseList: action.payload.purchaseList,
-      }
+      };
     default:
       return state;
-  };
-};
+  }
+}

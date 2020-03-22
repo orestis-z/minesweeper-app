@@ -3,6 +3,10 @@ package com.kima.minesweeper;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import org.devio.rn.splashscreen.SplashScreenReactPackage;
+import com.BV.LinearGradient.LinearGradientPackage;
+import com.github.wumke.RNExitApp.RNExitAppPackage;
+import com.reactnativecommunity.asyncstorage.AsyncStoragePackage;
 import com.sbugert.rnadmob.RNAdMobPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.github.yamill.orientation.OrientationPackage;
@@ -35,6 +39,10 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new SplashScreenReactPackage(),
+            new LinearGradientPackage(),
+            new RNExitAppPackage(),
+            new AsyncStoragePackage(),
           new RNAdMobPackage(),
           new VectorIconsPackage(),
           new OrientationPackage(),
