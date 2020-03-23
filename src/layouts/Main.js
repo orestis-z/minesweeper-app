@@ -77,6 +77,6 @@ class Main extends Component {
   }
 
   render() {
-    return <MainScene />;
+    return this.props.loaded ? <MainScene /> : null;
   }
 }

@@ -25,17 +25,19 @@ export default function reducer(
           Dimensions.get("window").width &&
         action.payload.general.windowSize.height ===
           Dimensions.get("window").height
-      )
+      ) {
+        let gameState = action.payload.game.gameState;
+        // if (gameState == "LOST") gameState = "NOT_STARTED";
         return {
           ...state,
           cellStates: action.payload.game.cellStates,
-          gameState: action.payload.game.gameState,
+          gameState,
           // dimensions: action.payload.game.dimensions,
           time: action.payload.game.time,
           inputMode: action.payload.game.inputMode,
           mineField: action.payload.game.mineField,
         };
-      else return state;
+      } else return state;
     case "SET_STATE":
       return {
         ...state,
