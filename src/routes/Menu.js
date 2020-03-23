@@ -25,11 +25,11 @@ import colors from "src/colors";
 const fontSize = normalize(14);
 const menuOptionsMarginVertical = 10;
 
-const Label = ({ label }) => (
+const Label = ({ label, style }) => (
   <View
     style={{
-      paddingRight: 40,
       flexDirection: "row",
+      ...style,
     }}
   >
     <View style={{ borderBottomWidth: 1.5, paddingLeft: 2, marginLeft: -2 }}>
@@ -65,7 +65,7 @@ class Game extends Component {
             paddingLeft: 0,
           }}
         >
-          <Label label="Game" />
+          <Label label="Game" style={{ paddingRight: 20 }} />
         </MenuTrigger>
         <MenuOptions
           style={{
@@ -140,7 +140,7 @@ class Options extends Component {
             paddingLeft: 0,
           }}
         >
-          <Label label="Options" />
+          <Label label="Options" style={{ paddingHorizontal: 20 }} />
         </MenuTrigger>
         <MenuOptions
           style={{
@@ -255,7 +255,7 @@ class More extends Component {
             paddingLeft: 0,
           }}
         >
-          <Label label="More" />
+          <Label label="More" style={{ paddingHorizontal: 20 }} />
         </MenuTrigger>
         <MenuOptions
           style={{
