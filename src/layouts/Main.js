@@ -14,7 +14,7 @@ import { Main as MainScene, Loading } from "src/routes";
 import { connect } from "react-redux";
 
 // lib
-import { inAppPurchase } from "src/lib";
+import { inAppPurchase, errorHandle } from "src/lib";
 
 const _orientationDidChange = ({ window: { width, height } }) => {
   const orientation = width > height ? "LANDSCAPE" : "PORTRAIT";
@@ -44,36 +44,22 @@ export default
   purchased: store.general.purchased,
 }))
 class Main extends Component {
-  // constructor(props) {
-  //   super(props);
-
-  //   inAppPurchase.open()
-  //   .then(inAppPurchase.consumeAll) // testing
-  //   .then(() => store.dispatch({
-  //     type: 'PURCHASED',
-  //     payload: {purchased: false, purchaseList: [false, false, false, false, false]}
-  //   })) // testing
-  //   .then(inAppPurchase.close);
-  // }
-
-  UNSAFE_componentWillUpdate(nextProps, nextState) {
-    if (nextProps.loaded && !nextProps.purchased && Platform.OS !== "web")
+  componentDidUpdate() {
+    if (this.props.loaded && !this.props.purchased && Platform.OS !== "web")
       inAppPurchase
         .open()
         .then(inAppPurchase.isPurchased)
         .then(
           ({ purchased, purchaseList }) =>
             purchased &&
-            nextProps.dispatch({
+            this.props.dispatch({
               type: "PURCHASED",
               payload: { purchased, purchaseList },
             }),
         )
-        .then(inAppPurchase.close)
-        .catch(inAppPurchase.close);
-
-    if (nextProps.loaded) SplashScreen.hide();
-    // .catch(err => {errorHandle(err); inAppPurchase.close()}); // testing
+        .catch(errorHandle)
+        .finally(inAppPurchase.close);
+    if (this.props.loaded) SplashScreen.hide();
   }
 
   render() {

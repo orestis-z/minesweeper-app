@@ -125,8 +125,8 @@ android {
         applicationId "com.kima.minesweeper"
         minSdkVersion 19
         targetSdkVersion 28
-        versionCode 17
-        versionName "3.0.4"
+        versionCode 19
+        versionName "3.0.6"
     }
     splits {
         abi {
@@ -149,7 +149,8 @@ android {
     buildTypes {
         release {
             minifyEnabled enableProguardInReleaseBuilds
-            proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+            shrinkResources true
+            proguardFiles getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
             signingConfig signingConfigs.release
         }
     }
@@ -165,6 +166,9 @@ android {
                         versionCodes.get(abi) * 1048576 + defaultConfig.versionCode
             }
         }
+    }
+    aaptOptions {
+        cruncherEnabled = false
     }
 }
 
