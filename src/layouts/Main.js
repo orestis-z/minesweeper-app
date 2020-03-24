@@ -44,6 +44,10 @@ export default
   purchased: store.general.purchased,
 }))
 class Main extends Component {
+  componentDidMount() {
+    if (this.props.loaded) setTimeout(SplashScreen.hide, 200);
+  }
+
   componentDidUpdate() {
     if (this.props.loaded && !this.props.purchased && Platform.OS !== "web")
       inAppPurchase
@@ -59,7 +63,7 @@ class Main extends Component {
         )
         .catch(errorHandle)
         .finally(inAppPurchase.close);
-    if (this.props.loaded) SplashScreen.hide();
+    if (this.props.loaded) setTimeout(SplashScreen.hide, 200);
   }
 
   render() {

@@ -125,8 +125,8 @@ android {
         applicationId "com.kima.minesweeper"
         minSdkVersion 19
         targetSdkVersion 28
-        versionCode 19
-        versionName "3.0.6"
+        versionCode 22
+        versionName "3.0.9"
     }
     splits {
         abi {
@@ -145,30 +145,43 @@ android {
                 keyPassword MY_RELEASE_KEY_PASSWORD
             }
         }
+        releaseInstant {
+            if (project.hasProperty('MY_RELEASE_STORE_FILE')) {
+                storeFile file(MY_RELEASE_STORE_FILE)
+                storePassword MY_RELEASE_STORE_PASSWORD
+                keyAlias MY_RELEASE_KEY_ALIAS
+                keyPassword MY_RELEASE_KEY_PASSWORD
+            }
+        }
     }
     buildTypes {
+        debug {
+            applicationIdSuffix ".debug"
+            debuggable true
+        }
         release {
             minifyEnabled enableProguardInReleaseBuilds
             shrinkResources true
             proguardFiles getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
             signingConfig signingConfigs.release
         }
+        releaseInstant {
+            minifyEnabled enableProguardInReleaseBuilds
+            shrinkResources true
+            proguardFiles getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
+            signingConfig signingConfigs.release
+
+            matchingFallbacks = ["release"]
+        }
     }
     // applicationVariants are e.g. debug, release
     applicationVariants.all { variant ->
         variant.outputs.each { output ->
-            // For each separate APK per architecture, set a unique version code as described here:
-            // http://tools.android.com/tech-docs/new-build-system/user-guide/apk-splits
-            def versionCodes = ["armeabi-v7a":1, "x86":2, "arm64-v8a": 3]
-            def abi = output.getFilter(OutputFile.ABI)
-            if (abi != null) {  // null for the universal-debug, universal-release variants
+            if (variant.name == "release") {
                 output.versionCodeOverride =
-                        versionCodes.get(abi) * 1048576 + defaultConfig.versionCode
+                        1000 +  defaultConfig.versionCode
             }
         }
-    }
-    aaptOptions {
-        cruncherEnabled = false
     }
 }
 
@@ -186,10 +199,12 @@ dependencies {
     implementation "com.android.support:appcompat-v7:28.0.3"
     implementation "com.facebook.react:react-native:+"  // From node_modules
     implementation ('com.google.android.gms:play-services-ads:16.+') { force = true; }
+    implementation "com.google.android.gms:play-services-instantapps:17.0.0"
     if (enableHermes) {
         def hermesPath = "../../node_modules/hermes-engine/android/";
         debugImplementation files(hermesPath + "hermes-debug.aar")
         releaseImplementation files(hermesPath + "hermes-release.aar")
+        releaseInstantImplementation files(hermesPath + "hermes-release.aar")
     } else {
         implementation jscFlavor
     }

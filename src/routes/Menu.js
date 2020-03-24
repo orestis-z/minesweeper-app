@@ -240,7 +240,7 @@ class More extends Component {
     if (value === 1)
       Share.share({
         subject: "Minesweeper Original",
-        message: `Check out "Minesweeper Original", an authentic remake of the old school puzzle game: https://play.google.com/store/apps/details?id=com.kima.minesweeper`,
+        message: `Check out Minesweeper Original, an authentic remake of the old school puzzle game: https://play.google.com/store/apps/details?id=com.kima.minesweeper`,
         url:
           "https://play.google.com/store/apps/details?id=com.kima.minesweeper",
       }).catch(errorHandle);

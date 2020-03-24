@@ -92,18 +92,32 @@ android-avd-list:
 .PHONY: android-build-apk
 android-build-apk:
 	npx jetify
+ifndef INSTANT
 	cd android ; ./gradlew assembleRelease ; cd -
 	@tput setaf 6;\
-	echo "open android/app/build/outputs/apk/release";\
+	echo "android/app/build/outputs/apk/release/app-release.apk";\
 	tput sgr0
+else
+	cd android ; ./gradlew assembleReleaseInstant ; cd -
+	@tput setaf 6;\
+	echo "android/app/build/outputs/apk/releaseInstant/app-releaseInstant.apk";\
+	tput sgr0
+endif
 
 .PHONY: android-build
 android-build:
 	npx jetify
+ifndef INSTANT
 	cd android ; ./gradlew bundleRelease ; cd -
 	@tput setaf 6;\
-	echo "open android/app/build/outputs/bundle/release";\
+	echo "android/app/build/outputs/bundle/release";\
 	tput sgr0
+else
+	cd android ; ./gradlew bundleReleaseInstant ; cd -
+	@tput setaf 6;\
+	echo "android/app/build/outputs/bundle/releaseInstant";\
+	tput sgr0
+endif
 
 .PHONY: android-install-release
 android-install-release:
