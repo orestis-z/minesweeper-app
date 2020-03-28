@@ -1,0 +1,22 @@
+<b>Minesweeper Original</b>
+Your puzzle skills will be put to test with this original minesweeper remake. Go back in time with retro Windows 95 / 98 (Microsoft) graphics, or keep it minimalistic in the distraction free mode.
+Uncover all the squares that do not contain mines without detonating them. Minesweeper Original is a simple and fun logic game, suitable for kids and adults to keep their mind sharp.
+
+<b>Controls</b>
+   —   Normal tap to uncover a square
+   —   Long tap to mark a mine
+
+<b>Minesweeper Old School features</b>
+   —  Beginner, intermediate and expert modes
+   —   Variable minefield size: From very large suitable for kids to super small for advanced players
+   —   Classic windows 95 / 98 graphics give a back-to-the-time feeling
+   —   Distraction-free mode for fully focused problem-solving
+   —   Full-screen adaptive size for the perfect user experience
+   —   Autosave function lets you interrupt the game anytime and continue later
+   —   Switch between mine mode and flag mode for effective gameplay
+   —   Optional vibration feedback
+   —   Offline playable at all times
+   —  5MB small app size keeps your storage free
+
+
+Rediscover the original old school minesweeper game now
